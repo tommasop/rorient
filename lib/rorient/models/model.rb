@@ -82,8 +82,8 @@ module Rorient
     
     # Method to check class existence and class being Edge
     def self.exists_and_is_edge?(class_name)
-      orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.split("_").map(&:capitalize).join('')}'")).present? && \
-      orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.split("_").map(&:capitalize).join('')}'")).present?
+      !orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.split("_").map(&:capitalize).join('')}'")).empty? && \
+      !orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.split("_").map(&:capitalize).join('')}'")).empty?
     end
     
     # Methods to traverse graphs through relations
