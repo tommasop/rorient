@@ -186,6 +186,11 @@ module Rorient
       new(atts).save
     end
     
+    def self.create_with_uuid(atts = {})
+      atts["uuid"] = SecureRandom.uuid 
+      new(atts).save
+    end
+    
     def self.query_builder(params:)
       query = ["select from #{self.name} where"]
       # if I only have the order param strip off where

@@ -3,6 +3,7 @@ require 'resource_kit'
 require 'oj'
 require 'active_support/inflector'
 require 'active_support/core_ext/object/blank'
+require 'securerandom'
 
 # Always parse string keys into symbols
 #Oj.default_options = {:symbol_keys => true}
