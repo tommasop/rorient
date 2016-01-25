@@ -82,8 +82,8 @@ module Rorient
     
     # Method to check class existence and class being Edge
     def self.exists_and_is_edge?(class_name)
-      orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.camelize}'")).present? && \
-      orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.camelize}'")).present?
+      orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.split("_").map(&:capitalize).join('')}'")).present? && \
+      orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.split("_").map(&:capitalize).join('')}'")).present?
     end
     
     # Methods to traverse graphs through relations
@@ -98,19 +98,19 @@ module Rorient
         attr_accessor edge_class
 
         define_method edge_class do
-          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}"))
+          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.split("_").map(&:capitalize).join('')}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}"))
         end
 
         define_method "#{edge_class}=" do | vertex |
           if vertex.class == vertex_class.constantize
-            self.send(edge_class) << "#{edge_class.camelize}".constantize.create_edge(from: self, to: vertex)  
+            self.send(edge_class) << "#{edge_class.split("_").map(&:capitalize).join('')}".constantize.create_edge(from: self, to: vertex)  
             self.send(edge_class)
           else
             raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
           end
         end
       else
-        raise NoEdgeClassError, "No Edge class found with name #{edge_class.camelize}"
+        raise NoEdgeClassError, "No Edge class found with name #{edge_class.split("_").map(&:capitalize).join('')}"
       end
     end
 
@@ -126,19 +126,19 @@ module Rorient
         attr_accessor edge_class
 
         define_method edge_class do
-          orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")
+          orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.split("_").map(&:capitalize).join('')}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")
         end
 
         define_method "#{edge_class}=" do | vertex |
           if vertex.class == vertex_class.constantize
-            self.send(edge_class) << "#{edge_class.camelize}".constantize.create_edge(from: vertex, to: self)  
+            self.send(edge_class) << "#{edge_class.split("_").map(&:capitalize).join('')}".constantize.create_edge(from: vertex, to: self)  
             self.send(edge_class)
           else
             raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
           end
         end
       else
-        raise NoEdgeClassError, "No Edge class found with name #{edge_class.camelize}"
+        raise NoEdgeClassError, "No Edge class found with name #{edge_class.split("_").map(&:capitalize).join('')}"
       end
     end
 
