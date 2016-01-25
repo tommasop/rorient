@@ -197,8 +197,8 @@ module Rorient
         query << "[wgs84_lat,wgs84_long,$spatial] NEAR [#{params["my_lat"]},#{params["my_long"]},{'maxDistance':#{distance_in_km}}]"
       end
       # retrieve all object properties which are the only valid parameters
-      attributes = orientdb.oclass.find(class_name: self.name)["properties"].map{|p| p["name"]}
-      #attributes = orientdb.query.execute(query_text: URI.encode("SELECT properties FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{self.name}'"))["result"]["properties"].map{ |prop| prop["name"]}
+      puts orientdb.oclass.find(class_name: self.name)["properties"]
+      attributes = orientdb.oclass.find(class_name: self.name)["properties"]
       # array intersection only keys that are properties will be left
       query_attributes = (attributes & params.keys)
       # if there is also a spatial query we need to add an AND
