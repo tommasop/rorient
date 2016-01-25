@@ -187,7 +187,7 @@ module Rorient
     end
     
     def self.query_builder(params:)
-      query = ["from #{self.name} where"]
+      query = ["select from #{self.name} where"]
       # if I only have the order param strip off where
       query[0].gsub!(" where", "") if params.keys.count == 1 && params["order"]
       # if these three params are present we have a spatial query
