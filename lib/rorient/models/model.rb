@@ -82,8 +82,8 @@ module Rorient
     
     # Method to check class existence and class being Edge
     def self.exists_and_is_edge?(class_name)
-      !orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.split("_").map(&:capitalize).join('')}'")).empty? && \
-      !orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.split("_").map(&:capitalize).join('')}'")).empty?
+      orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.capitalize}'")).present? && \
+      orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.capitalize}'")).present?
     end
     
     # Methods to traverse graphs through relations
@@ -98,19 +98,19 @@ module Rorient
         attr_accessor edge_class
 
         define_method edge_class do
-          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.split("_").map(&:capitalize).join('')}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}"))
+          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.capitalize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}"))
         end
 
         define_method "#{edge_class}=" do | vertex |
           if vertex.class == vertex_class.constantize
-            self.send(edge_class) << "#{edge_class.split("_").map(&:capitalize).join('')}".constantize.create_edge(from: self, to: vertex)  
+            self.send(edge_class) << "#{edge_class.capitalize}".constantize.create_edge(from: self, to: vertex)  
             self.send(edge_class)
           else
             raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
           end
         end
       else
-        raise NoEdgeClassError, "No Edge class found with name #{edge_class.split("_").map(&:capitalize).join('')}"
+        raise NoEdgeClassError, "No Edge class found with name #{edge_class.capitalize}"
       end
     end
 
@@ -126,19 +126,19 @@ module Rorient
         attr_accessor edge_class
 
         define_method edge_class do
-          orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.split("_").map(&:capitalize).join('')}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")
+          orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.capitalize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")
         end
 
         define_method "#{edge_class}=" do | vertex |
           if vertex.class == vertex_class.constantize
-            self.send(edge_class) << "#{edge_class.split("_").map(&:capitalize).join('')}".constantize.create_edge(from: vertex, to: self)  
+            self.send(edge_class) << "#{edge_class.capitalize}".constantize.create_edge(from: vertex, to: self)  
             self.send(edge_class)
           else
             raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
           end
         end
       else
-        raise NoEdgeClassError, "No Edge class found with name #{edge_class.split("_").map(&:capitalize).join('')}"
+        raise NoEdgeClassError, "No Edge class found with name #{edge_class.capitalize}"
       end
     end
 
@@ -197,8 +197,7 @@ module Rorient
         query << "[wgs84_lat,wgs84_long,$spatial] NEAR [#{params["my_lat"]},#{params["my_long"]},{'maxDistance':#{distance_in_km}}]"
       end
       # retrieve all object properties which are the only valid parameters
-      puts orientdb.oclass.find(class_name: self.name)["properties"]
-      attributes = orientdb.oclass.find(class_name: self.name)["properties"]
+      attributes = orientdb.oclass.find(class_name: self.class.to_s)["properties"].map{|prop| prop["name"]}
       # array intersection only keys that are properties will be left
       query_attributes = (attributes & params.keys)
       # if there is also a spatial query we need to add an AND
