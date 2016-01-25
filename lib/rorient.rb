@@ -1,6 +1,7 @@
 require 'rorient/version'
 require 'resource_kit'
 require 'oj'
+require 'active_support/inflector'
 
 # Always parse string keys into symbols
 #Oj.default_options = {:symbol_keys => true}
