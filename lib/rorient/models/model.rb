@@ -98,7 +98,7 @@ module Rorient
         attr_accessor edge_class
 
         define_method edge_class do
-          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{self.rid}"))
+          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{self.rid}"))[:result]
         end
 
         define_method "#{edge_class}=" do | vertex |
@@ -126,7 +126,7 @@ module Rorient
         attr_accessor edge_class
 
         define_method edge_class do
-          orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")
+          orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")[:result]
         end
 
         define_method "#{edge_class}=" do | vertex |
