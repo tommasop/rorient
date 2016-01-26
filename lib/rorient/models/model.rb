@@ -255,8 +255,7 @@ module Rorient
     def load!
       if ! new?
         attributes = orientdb.document.find(rid: rid)
-        puts attributes
-        @version = attributes["@version"]
+        @version = attributes[:@version]
         update_attributes(attributes.delete_if{|k,_| k.to_s.include?("@")}) 
       end
       return self
