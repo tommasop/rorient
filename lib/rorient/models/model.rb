@@ -98,7 +98,7 @@ module Rorient
         attr_accessor edge_class
 
         define_method edge_class do
-          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}"))
+          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{self.rid}"))
         end
 
         define_method "#{edge_class}=" do | vertex |
@@ -187,7 +187,7 @@ module Rorient
     end
     
     def self.create_with_uuid(atts = {})
-      atts["uuid"] = SecureRandom.uuid 
+      atts[:uuid] = SecureRandom.uuid 
       new(atts).save
     end
     
@@ -363,7 +363,7 @@ module Rorient
         @version += 1
       # we need to create
       else
-        @rid = orientdb.document.create(features.merge(attributes))["@rid"]
+        @rid = orientdb.document.create(features.merge(attributes))[:@rid]
         @version = 0
       end
 
