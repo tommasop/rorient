@@ -4,7 +4,7 @@ module Rorient
 
     resources do
       action :execute do
-        path { "/command/#{database}/sql" }
+        path { "/command/#{database}/sql/:command_text" }
         verb :post
         handler(200) { |response| Oj.load(response.body) }
       end
