@@ -16,6 +16,7 @@ module Rorient
   autoload :DocumentResource, 'rorient/resources/document_resource'
   autoload :OClassResource, 'rorient/resources/oclass_resource'
   autoload :QueryResource, 'rorient/resources/query_resource'
+  autoload :CommandResource, 'rorient/resources/command_resource'
 
   # Base Model
   autoload :Model, 'rorient/models/model'

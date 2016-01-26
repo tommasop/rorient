@@ -23,7 +23,8 @@ module Rorient
       {
         document: DocumentResource,
         oclass: OClassResource,
-        query: QueryResource
+        query: QueryResource,
+        command: CommandResource
       }
     end
 
