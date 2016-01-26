@@ -216,6 +216,54 @@ module Rorient
       orientdb.query.execute(query_text: URI.encode(query.join(" ")))
     end
 
+    # method to map google zoom levels to square kilometers
+    def self.zoom_to_distance_in_km(zoom)
+      case zoom.to_i
+      when 20
+        return 0.5
+      when 19
+        return 1
+      when 18
+        return 2
+      when 17
+        return 4
+      when 16
+        return 8
+      when 15
+        return 10
+      when 14
+        return 12
+      when 13
+        return 14
+      when 12
+        return 20
+      when 11
+        return 24
+      when 10
+        return 34
+      when 9
+        return 44
+      when 8
+        return 60
+      when 7
+        return 96
+      when 6
+        return 195
+      when 5
+        return 390
+      when 4
+        return 785
+      when 3
+        return 1575
+      when 2
+        return 3150
+      when 1
+        return 6300
+      default
+        return nil
+      end  
+    end
+
     def initialize(atts={})
       @attributes = {}
       @_memo = {}
