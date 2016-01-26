@@ -192,7 +192,7 @@ module Rorient
     end
     
     def self.find(params:)
-      query = ["select from #{self.name} where"]
+      query = ["from #{self.name} where"]
       # if I only have the order param strip off where
       query[0].gsub!(" where", "") if params.keys.count == 1 && params["order"]
       # if these three params are present we have a spatial query
@@ -213,7 +213,7 @@ module Rorient
       end
       # adding an order by clause
       query << "order by #{params["order"]}" if params["order"]
-      orientdb.query.execute(query_text: URI.encode(query.join(" ")))
+      orientdb.query.execute(query_text: URI.encode("SELECT #{query.join(" ")}"))
     end
 
     # method to map google zoom levels to square kilometers
