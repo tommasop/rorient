@@ -178,7 +178,7 @@ module Rorient
 
     # An Ohm::Set wrapper for Model.key[:all].
     def self.all
-      Ohm::Set.new(self, key, key[:all])
+      orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name}")) 
     end
 
     # Syntactic sugar for Model.new(atts).save
@@ -191,7 +191,7 @@ module Rorient
       new(atts).save
     end
     
-    def self.query_builder(params:)
+    def self.find(params:)
       query = ["select from #{self.name} where"]
       # if I only have the order param strip off where
       query[0].gsub!(" where", "") if params.keys.count == 1 && params["order"]
@@ -256,7 +256,7 @@ module Rorient
       if ! new?
         attributes = orientdb.document.find(rid: rid)
         @version = attributes["@version"]
-        update_attributes(attributes.delete_if{|k,_| k.include?("@")}) 
+        update_attributes(attributes.delete_if{|k,_| k.to_s.include?("@")}) 
       end
       return self
     end
