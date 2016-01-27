@@ -273,6 +273,7 @@ module Rorient
       @attributes = {}
       @_memo = {}
       @rid = Rid.get(atts) 
+      puts rid
       @version = 0
       update_attributes(_remove_metadata(atts))
     end 
