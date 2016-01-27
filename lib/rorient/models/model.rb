@@ -361,7 +361,7 @@ module Rorient
       }
       
       # We need to update
-      if defined?(@rid)
+      if defined?(@rid) && !@rid.nil?
         features["@version"] = @version
         puts features.merge(attributes)
         orientdb.document.update(features.merge(attributes), rid: rid)
