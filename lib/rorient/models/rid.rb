@@ -8,6 +8,7 @@ module Rorient
       when atts.keys.include?(:@rid)
         return atts[:@rid].gsub!("#",'')
       when atts.keys.include?(:rid)
+        puts atts[:rid]
         return atts[:rid].gsub!("#",'')
       default
         return nil
