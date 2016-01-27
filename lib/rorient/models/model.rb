@@ -424,7 +424,7 @@ module Rorient
     end
 
     def _remove_metadata(atts)
-      atts.delete_if{|k,_| k.to_s.include?("@")}
+      atts.delete_if{|k,_| k.to_s.include?("@") || k == :rid}
     end
 
     def _sanitized_attributes
