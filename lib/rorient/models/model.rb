@@ -224,11 +224,11 @@ module Rorient
     def self.zoom_to_distance_in_km(zoom)
       case zoom.to_i
       when 20
-        return 0.5
+        return 1 
       when 19
-        return 1
-      when 18
         return 2
+      when 18
+        return 3
       when 17
         return 4
       when 16
