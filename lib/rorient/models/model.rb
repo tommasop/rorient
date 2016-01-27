@@ -192,7 +192,7 @@ module Rorient
     end
 
     def self.find_by_uuid(uuid)
-      self.new(orientdb.query.execute(query_text: URI.encode("SELECT @rid from #{self.name} WHERE uuid = '#{uuid}'"))[:result][0][:rid].gsub!("#",'')).load!
+      self.new(rid: orientdb.query.execute(query_text: URI.encode("SELECT @rid from #{self.name} WHERE uuid = '#{uuid}'"))[:result][0][:rid].gsub!("#",'')).load!
     end
     
     def self.find(params:)
