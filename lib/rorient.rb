@@ -19,6 +19,7 @@ module Rorient
   autoload :CommandResource, 'rorient/resources/command_resource'
 
   # Base Model
+  autoload :Rid, 'rorient/models/rid'
   autoload :Model, 'rorient/models/model'
 
   # Utils

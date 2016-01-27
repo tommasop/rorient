@@ -271,11 +271,7 @@ module Rorient
     def initialize(atts={})
       @attributes = {}
       @_memo = {}
-      if atts[:@rid]
-        @rid = atts.delete(:@rid) 
-      elsif atts[:rid]
-        @rid = atts.delete(:rid)
-      end
+      @rid = Rid.get(atts) 
       @version = 0
       update_attributes(atts)
     end 
