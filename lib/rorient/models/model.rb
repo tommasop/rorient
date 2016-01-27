@@ -309,7 +309,7 @@ module Rorient
       if ! new?
         attributes = orientdb.document.find(rid: rid)
         @version = attributes[:@version]
-        update_attributes(_remove_metadat(attributes)) 
+        update_attributes(_remove_metadata(attributes)) 
       end
       return self
     end
