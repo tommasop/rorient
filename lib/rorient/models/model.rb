@@ -273,7 +273,7 @@ module Rorient
       @_memo = {}
       @rid = Rid.get(atts) 
       @version = 0
-      update_attributes(atts)
+      update_attributes(_remove_metadata(atts))
     end 
 
     # Access the RID used to store this model. 
@@ -308,7 +308,7 @@ module Rorient
       if ! new?
         attributes = orientdb.document.find(rid: rid)
         @version = attributes[:@version]
-        update_attributes(attributes.delete_if{|k,_| k.to_s.include?("@")}) 
+        update_attributes(_remove_metadat(attributes)) 
       end
       return self
     end
@@ -420,6 +420,10 @@ module Rorient
 
     def orientdb
       model.orientdb
+    end
+
+    def _remove_metadata(atts)
+      atts.delete_if{|k,_| k.to_s.include?("@")}
     end
 
     def _sanitized_attributes
