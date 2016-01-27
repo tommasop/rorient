@@ -196,6 +196,7 @@ module Rorient
     end
     
     def self.find(params:)
+      params.keys.map{|k| k.to_sym }
       query = ["from #{self.name} where"]
       # if I only have the order param strip off where
       query[0].gsub!(" where", "") if params.keys.count == 1 && params[:order]
