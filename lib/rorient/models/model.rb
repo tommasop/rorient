@@ -190,6 +190,10 @@ module Rorient
       atts[:uuid] = SecureRandom.uuid 
       new(atts).save
     end
+
+    def self.find_by_uuid(uuid)
+      self.new(orientdb.query.execute(query_text: URI.encode("SELECTi @rid from #{self.name} WHERE uuid = #{uuid}"))[:result][0][:rid].gsub!("#",'')).load!
+    end
     
     def self.find(params:)
       query = ["from #{self.name} where"]
