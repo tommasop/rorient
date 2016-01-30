@@ -178,7 +178,7 @@ module Rorient
 
     # An Ohm::Set wrapper for Model.key[:all].
     def self.all
-      orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name}")) 
+      orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name}/1000")) 
     end
 
     # Syntactic sugar for Model.new(atts).save
@@ -217,6 +217,7 @@ module Rorient
       end
       # adding an order by clause
       query << "order by #{params["order"]}" if params["order"]
+      query << "/1000"
       orientdb.query.execute(query_text: URI.encode("SELECT #{query.join(" ")}", /\s|(\*)|(\[)|(\])|(\$)|(\{)|(\})/))
     end
 
