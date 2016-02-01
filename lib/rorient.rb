@@ -6,7 +6,7 @@ require 'active_support/core_ext/object/blank'
 require 'securerandom'
 
 # Always parse string keys into symbols
-#Oj.default_options = {:symbol_keys => true}
+Oj.default_options = {:symbol_keys => true}
 
 module Rorient
   autoload :Client, 'rorient/client'

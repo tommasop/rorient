@@ -74,9 +74,9 @@ module Rorient
 
     # Attributes from object schema if any
     def self.define_attributes
-      attributes = orientdb.oclass.find(class_name: self.name)["properties"]
+      attributes = orientdb.oclass.find(class_name: self.name)[:properties]
       attributes.each do |attr|
-        attribute attr["name"].to_sym
+        attribute attr[:name].to_sym
       end
     end
     
@@ -176,9 +176,19 @@ module Rorient
       orientdb.document.exists(rid: rid)
     end
 
-    # An Ohm::Set wrapper for Model.key[:all].
+    # An Rorient::Set wrapper for Model.key[:all].
     def self.all
       orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name}/1000")) 
+    end
+    
+    # An Rorient::Set wrapper for Model.key[:all].
+    def self.first
+      self.new(self.all[:result].first)
+    end
+    
+    # An Rorient::Set wrapper for Model.key[:all].
+    def self.last
+      self.new(self.all[:result].last)
     end
 
     # Syntactic sugar for Model.new(atts).save
@@ -332,7 +342,7 @@ module Rorient
     #                 |    u.get(:name) == "B"
     #
     def get(att)
-      @attributes[att] = orientdb.query.execute(query_text: URI.encode("SELECT #{att} FROM #{self.class.to_s} WHERE @rid = #{rid}"))["result"][att]
+      @attributes[att] = orientdb.query.execute(query_text: URI.encode("SELECT #{att} FROM #{self.class.to_s} WHERE @rid = #{rid}"))[:result][att]
     end
 
 
