@@ -208,25 +208,25 @@ module Rorient
     def self.find(params:)
       query = ["from #{self.name} where"]
       # if I only have the order param strip off where
-      query[0].gsub!(" where", "") if params.keys.count == 1 && params[:order]
+      query[0].gsub!(" where", "") if params.keys.count == 1 && params["order"]
       # if these three params are present we have a spatial query
-      if [:my_lat, :my_long, :zoom].all?{|spatial_param| params.key? spatial_param}
-        distance_in_km = zoom_to_distance_in_km(params[:zoom])
+      if ["my_lat", "my_long", "zoom"].all?{|spatial_param| params.key? spatial_param}
+        distance_in_km = zoom_to_distance_in_km(params["zoom"])
         query.insert(0, "*,$distance") 
-        query << "[wgs84_lat,wgs84_long,$spatial] NEAR [#{params[:my_lat]},#{params[:my_long]},{'maxDistance':#{distance_in_km}}]"
+        query << "[wgs84_lat,wgs84_long,$spatial] NEAR [#{params["my_lat"]},#{params["my_long"]},{'maxDistance':#{distance_in_km}}]"
       end
       # retrieve all object properties which are the only valid parameters
-      attributes = orientdb.oclass.find(class_name: self.name)[:properties].map{|prop| prop[:name].to_sym}
+      attributes = orientdb.oclass.find(class_name: self.name)[:properties].map{|prop| prop[:name]}
       # array intersection only keys that are properties will be left
       query_attributes = (attributes & params.keys)
       # if there is also a spatial query we need to add an AND
       query.insert(3, "AND") if query.length == 3 && query_attributes.present?
       # each property becomes a where property= ecc.
       query_attributes.each_with_index do |attr,i|
-        query << "#{attr.to_s} = '#{params[attr]}' #{"AND" if i < query_attributes.length - 1}" 
+        query << "#{attr} = '#{params[attr]}' #{"AND" if i < query_attributes.length - 1}" 
       end
       # adding an order by clause
-      query << "order by #{params[:order]}" if params[:order]
+      query << "order by #{params["order"]}" if params["order"]
       query << "/1000"
       orientdb.query.execute(query_text: URI.encode("SELECT #{query.join(" ")}", /\s|(\*)|(\[)|(\])|(\$)|(\{)|(\})/))
     end
