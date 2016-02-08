@@ -280,12 +280,11 @@ module Rorient
     end
 
     def initialize(atts={})
-      puts atts
       @attributes = {}
       @_memo = {}
       @rid = Rid.get(atts) 
       puts rid
-      @version = atts["@version"] || 0
+      @version = atts[:@version] || 0
       update_attributes(_remove_metadata(atts))
     end 
 
