@@ -280,6 +280,7 @@ module Rorient
     end
 
     def initialize(atts={})
+      puts atts
       @attributes = {}
       @_memo = {}
       @rid = Rid.get(atts) 
