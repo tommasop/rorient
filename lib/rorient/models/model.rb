@@ -81,8 +81,8 @@ module Rorient
     end
     
     # Method to check class existence and class being Edge
-    def self.exists_and_is_edge?(class_name)
-      orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.camelize}'")).present? && \
+    def is_edge?(class_name)
+     # orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.camelize}'")).present? && \
       orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.camelize}'")).present?
     end
     
@@ -94,7 +94,7 @@ module Rorient
     # my_model = MyModel.first
     # my_model.has_relations.in # gives the MyOtherModel object
     def self.outs edge_class, vertex_class
-      if self.exists_and_is_edge?(edge_class)
+      if self.is_edge?(edge_class)
         attr_accessor edge_class
 
         define_method edge_class do
@@ -122,7 +122,7 @@ module Rorient
     # my_model = MyModel.first
     # my_model.has_relations.out # gives the MyOtherModel object
     def self.ins edge_class, vertex_class
-      if self.exists_and_is_edge?(edge_class) 
+      if self.is_edge?(edge_class) 
         attr_accessor edge_class
 
         define_method edge_class do
