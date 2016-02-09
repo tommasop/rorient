@@ -9,9 +9,10 @@ module ErrorHandlingResourceable
           error.limit = response.headers['RateLimit-Limit']
           error.remaining = response.headers['RateLimit-Remaining']
           error.reset_at = response.headers['RateLimit-Reset']
-          raise error
+          error
         else
-          raise Rorient::Error.new("#{response.status}: #{response.body}")
+          error = Rorient::Error.new("#{response.status}: #{response.body}")
+          error.message
         end
       end
     end
