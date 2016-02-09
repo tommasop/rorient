@@ -81,7 +81,7 @@ module Rorient
     end
     
     # Method to check class existence and class being Edge
-    def is_edge?(class_name)
+    def self.is_edge?(class_name)
      # orientdb.query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{class_name.camelize}'")).present? && \
       orientdb.query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.camelize}'")).present?
     end
