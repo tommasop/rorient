@@ -178,17 +178,15 @@ module Rorient
 
     # An Rorient::Set wrapper for Model.key[:all].
     def self.all
-      orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name}/1000")) 
+      orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name}/1000")) # [:result].map{|jo| self.new(jo) } 
     end
-    
-    # An Rorient::Set wrapper for Model.key[:all].
+   
     def self.first
-      self.new(self.all[:result].first)
+      self.new(orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid/1"))[:result].first)
     end
     
-    # An Rorient::Set wrapper for Model.key[:all].
     def self.last
-      self.new(self.all[:result].last)
+      self.new(orientdb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid desc/1"))[:result].first)
     end
 
     # Syntactic sugar for Model.new(atts).save
@@ -283,7 +281,6 @@ module Rorient
       @attributes = {}
       @_memo = {}
       @rid = Rid.get(atts) 
-      puts rid
       @version = atts[:@version] || 0
       update_attributes(_remove_metadata(atts))
     end 
