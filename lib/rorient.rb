@@ -25,6 +25,9 @@ module Rorient
   # Utils
   autoload :ErrorHandlingResourceable, 'rorient/error_handling_resourceable'
 
+  # Migrations
+  autoload :Migrations, 'rorient/migrations'
+
   # Errors
   
   Error = Class.new(StandardError)
