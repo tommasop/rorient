@@ -1,5 +1,9 @@
 module Rorient
   class Model
+    # This is the instance variable containing the client
+    # to OrientDB HTTP API
+    @orientdb = nil
+
     # Raised when metadata are not present
     class MissingMetadata < StandardError; end
     # Raised when trying to create an edge with a different
@@ -8,15 +12,6 @@ module Rorient
     class NoEdgeClassError < StandardError; end  
     class MissingRID < Error; end
     
-    # The orientdb database (name) we are connecting to
-    def self.database
-      @database
-    end
-
-    def self.database=(database)
-      @database = database
-    end
-
     # The client to connect to the OrientDB HTTP API
     # Use this if you want to do quick ad hoc orientdb commands against the
     # defined connection.
@@ -26,23 +21,24 @@ module Rorient
     #   Rorient.orientdb. 
     #
     def self.orientdb
-      # The orientdb connection must be scoped to a database
-      @orientdb ||= Rorient::Client.new(scope:{database: self.database})
+      @orientdb || raise(Error, "No database associated with #{self}") 
     end
 
     def self.orientdb=(orientdb)
       @orientdb = orientdb
     end
-   
-    # Methods to set db and client in new models
-    def self.set_database(database_name)
-      self.database=database_name
-    end
     
-    def self.set_client
-      self.orientdb
+    # Define the orientdb database passed in to the model
+    # directly to the inherited class
+    def self.inherited(subclass)
+      super
+      subclass.instance_variable_set(:@orientdb, @orientdb.dup) unless @orientdb.nil?
     end
 
+    def orientdb
+      self.class.send(orientdb)
+    end
+   
     def self.mutex
       @@mutex ||= Mutex.new
     end
@@ -447,6 +443,19 @@ module Rorient
       end
 
       return result
+    end
+  end
+  
+  #   class Comment < Rorient::Model(DB)
+  #   this sets the instance variable @orientdb to the
+  #   OrientDB Database 
+  def self.Model(source)
+    if source.is_a?(Rorient::Client)
+      c = Class.new(Rorient::Model)
+      c.orientdb = source
+      c
+    else
+      raise(Error, "No OrientDB connection associated with #{self}")
     end
   end
 end

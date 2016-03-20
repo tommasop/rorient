@@ -10,6 +10,10 @@ Oj.default_options = {:symbol_keys => true}
 
 module Rorient
   autoload :Client, 'rorient/client'
+  
+  # Base Model
+  autoload :Rid, 'rorient/models/rid'
+  autoload :Model, 'rorient/models/model'
 
   # Resources
   #autoload :Server, 'rorient/resources/server'
@@ -17,10 +21,6 @@ module Rorient
   autoload :OClassResource, 'rorient/resources/oclass_resource'
   autoload :QueryResource, 'rorient/resources/query_resource'
   autoload :CommandResource, 'rorient/resources/command_resource'
-
-  # Base Model
-  autoload :Rid, 'rorient/models/rid'
-  autoload :Model, 'rorient/models/model'
 
   # Utils
   autoload :ErrorHandlingResourceable, 'rorient/error_handling_resourceable'
@@ -45,5 +45,9 @@ module Rorient
     def remaining
       @remaining.to_i if @remaining
     end
+  end
+
+  def self.connect(db_name:)
+    Rorient::Client.new(scope:{database: db_name})
   end
 end
