@@ -84,20 +84,20 @@ module Rorient
     
     # Methods to traverse graphs through relations
     # class MyModel < Rorient::Model
-    #   outs "has_relations", "MyOtherModel"
+    #   has_many "my_names", vertex_class:"MyOtherModel", edge_class:"has_relations"
     # end
     # 
     # my_model = MyModel.first
-    # my_model.has_relations.in # gives the MyOtherModel object
-    def self.outs edge_class, vertex_class
+    # my_model.my_names.in # gives the MyOtherModel object
+    def self.has_many(association_name, vertex_class: , edge_class:)
       if self.is_edge?(edge_class)
-        attr_accessor edge_class
+        attr_accessor association_name
 
-        define_method edge_class do
+        define_method association_name do
           orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( OUT(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{self.rid}"))[:result]
         end
 
-        define_method "#{edge_class}=" do | vertex |
+        define_method "#{association_name}=" do | vertex |
           if vertex.class == vertex_class.constantize
             self.send(edge_class) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{self.rid} to #{vertex.rid}"))  
             self.send(edge_class)
@@ -112,20 +112,20 @@ module Rorient
 
     # Methods to traverse graphs through relations
     # class MyModel < Rorient::Model
-    #   ins "has_relations", "MyOtherModel"
+    #   belongs_to "my_name", vertex_class:"MyOtherModel",edge_class:"has_relations"
     # end
     # 
     # my_model = MyModel.first
-    # my_model.has_relations.out # gives the MyOtherModel object
-    def self.ins edge_class, vertex_class
+    # my_model.my_name.out # gives the MyOtherModel object
+    def self.belongs_to(association_name, vertex_class:, edge_class:)
       if self.is_edge?(edge_class) 
-        attr_accessor edge_class
+        attr_accessor association_name
 
-        define_method edge_class do
+        define_method association_name do
           orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")[:result]
         end
 
-        define_method "#{edge_class}=" do | vertex |
+        define_method "#{association_name}=" do | vertex |
           if vertex.class == vertex_class.constantize
             self.send(edge_class) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{vertex.rid} to #{self.rid}"))  
             self.send(edge_class)
