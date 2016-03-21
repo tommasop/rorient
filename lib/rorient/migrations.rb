@@ -26,5 +26,11 @@ module Rorient
         Seed.find(name).each      { |seed|      puts seed      }
       end
     end
+
+    def load_tasks!
+      load 'rorient/migrations/tasks/migrate.rake'
+      load 'rorient/migrations/tasks/seed.rake'
+      load 'rorient/migrations/tasks/scripts.rake'
+    end
   end
 end
