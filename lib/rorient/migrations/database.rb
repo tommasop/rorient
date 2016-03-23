@@ -48,6 +48,7 @@ module Rorient
 
       def self.connect(options)
         # TODO: Rorient connection
+        Rorient.connect(db_name: options[:database])
         Sequel.connect(adapter:  options[:adapter],
                        encoding: options[:encoding],
                        host:     options[:host],
@@ -58,6 +59,7 @@ module Rorient
       end
 
       def install_table
+        # TODO: check orientdb class existence
         return if @driver.table_exists?(HISTORY_TABLE)
 
         puts "[!] Installing `#{HISTORY_TABLE}` history table"

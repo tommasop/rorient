@@ -21,6 +21,7 @@ module Rorient
   autoload :OClassResource, 'rorient/resources/oclass_resource'
   autoload :QueryResource, 'rorient/resources/query_resource'
   autoload :CommandResource, 'rorient/resources/command_resource'
+  autoload :BatchResource, 'rorient/resources/batch_resource'
 
   # Utils
   autoload :ErrorHandlingResourceable, 'rorient/error_handling_resourceable'
