@@ -14,9 +14,6 @@ module Rorient
   # Base Model
   autoload :Rid, 'rorient/models/rid'
   autoload :Model, 'rorient/models/model'
-  # need to call this or it will not find it in the
-  # self.Model method!
-  Rorient::Model
 
   # Resources
   #autoload :Server, 'rorient/resources/server'
@@ -55,3 +52,7 @@ module Rorient
     Rorient::Client.new(server: server, user: user, password: password, scope:{database: db_name})
   end
 end
+
+# need to call this or it will not find it in the
+# self.Model method!
+Rorient::Model
