@@ -14,6 +14,9 @@ module Rorient
   # Base Model
   autoload :Rid, 'rorient/models/rid'
   autoload :Model, 'rorient/models/model'
+  # need to call this or it will not find it in the
+  # self.Model method!
+  Rorient::Model
 
   # Resources
   #autoload :Server, 'rorient/resources/server'
