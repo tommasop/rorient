@@ -48,7 +48,7 @@ module Rorient
     end
   end
 
-  def self.connect(server:, db_name:)
-    Rorient::Client.new(server: server, scope:{database: db_name})
+  def self.connect(server:, user:, password:, db_name:)
+    Rorient::Client.new(server: server, user: user, password: password, scope:{database: db_name})
   end
 end
