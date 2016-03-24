@@ -2,18 +2,19 @@ require "faraday"
 
 module Rorient
   class Client
-    ORIENTDB_API = 'http://159.122.132.173:2480'
-    
     attr_reader :db
 
-    def initialize(scope: nil)
+    def initialize(server:, user:, password:, scope: nil)
+      @server = server
+      @user = user
+      @password = password
       @scope = scope
     end
 
     def connection
       Faraday.new(connection_options) do |faraday|
         faraday.request  :url_encoded                           # form-encode POST params
-        faraday.request  :basic_auth, "admin", "makepl@n2o15"   # basic authentication
+        faraday.request  :basic_auth, @user, @password          # basic authentication
         faraday.response :logger                                # log requests to STDOUT
         faraday.adapter  Faraday.default_adapter                # make requests with Net::HTTP
       end
@@ -24,7 +25,8 @@ module Rorient
         document: DocumentResource,
         oclass: OClassResource,
         query: QueryResource,
-        command: CommandResource
+        command: CommandResource,
+        batch: BatchResource
       }
     end
 
@@ -45,7 +47,7 @@ module Rorient
 
     def connection_options
       {
-        url: ORIENTDB_API,
+        url: @server,
         headers: {
           content_type: "application/json",
           content_length: "0", 
