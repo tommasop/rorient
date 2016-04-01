@@ -8,7 +8,7 @@ module Rorient
 
       def initialize(name, options)
         @name    = name
-        @adapter = options[:adapter]
+        @server = options[:server]
         begin
           @driver = self.class.connect(options)
         rescue
@@ -47,15 +47,12 @@ module Rorient
       private
 
       def self.connect(options)
-        # TODO: Rorient connection
-        Rorient.connect(db_name: options[:database])
-        Sequel.connect(adapter:  options[:adapter],
-                       encoding: options[:encoding],
-                       host:     options[:host],
-                       database: options[:database],
-                       user:     options[:username],
-                       password: options[:password],
-                       test:     true)
+        Rorient.connect(
+                         server: options[:server],
+                         user: options[:user],
+                         password: options[:password],
+                         db_name: options[:database]
+        )
       end
 
       def install_table
