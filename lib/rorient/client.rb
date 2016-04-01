@@ -24,6 +24,7 @@ module Rorient
       {
         document: DocumentResource,
         oclass: OClassResource,
+        oproperty: OPropertyResource,
         query: QueryResource,
         command: CommandResource,
         batch: BatchResource
@@ -31,7 +32,11 @@ module Rorient
     end
 
     def table_exists?(table_name)
-      !query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{table_name}'")).nil?
+      !oclass.find(class_name: table_name).nil?
+    end
+
+    def create_table(table_name)
+      oclass.create(class_name: table_name)
     end
 
     def method_missing(name, *args, &block)

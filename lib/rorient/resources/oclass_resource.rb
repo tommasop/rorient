@@ -7,15 +7,16 @@ module Rorient
         path { "/class/#{database}/:class_name" }
         verb :get
         handler(200) { |response| Oj.load(response.body) }
+        handler(404) { |response| nil }
       end
 
-      #action :create do
-      #  path { "/document/#{database}/" }
-      #  verb :post
-      #  body { |object| Oj.dump(object, mode: :compat) }
-      #  handler(201) { |response|  response.body }
-      #  # handler(422) { |response| ErrorMapping.fail_with(FailedCreate, response.body) }
-      #end
+      action :create do
+        path { "/class/#{database}/:class_name" }
+        verb :post
+        # body { |object| Oj.dump(object, mode: :compat) }
+        handler(201) { |response|  response.body }
+        # handler(422) { |response| ErrorMapping.fail_with(FailedCreate, response.body) }
+      end
 
       #action :update do
       #  path { "/document/#{database}/:rid" }

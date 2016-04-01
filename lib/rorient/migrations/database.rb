@@ -7,7 +7,6 @@ module Rorient
       attr_reader :name, :driver
 
       def initialize(name, options)
-        puts options
         @name    = name
         @server = options[:server]
         begin

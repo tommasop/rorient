@@ -19,6 +19,7 @@ module Rorient
   #autoload :Server, 'rorient/resources/server'
   autoload :DocumentResource, 'rorient/resources/document_resource'
   autoload :OClassResource, 'rorient/resources/oclass_resource'
+  autoload :OPropertyResource, 'rorient/resources/oproperty_resource'
   autoload :QueryResource, 'rorient/resources/query_resource'
   autoload :CommandResource, 'rorient/resources/command_resource'
   autoload :BatchResource, 'rorient/resources/batch_resource'
