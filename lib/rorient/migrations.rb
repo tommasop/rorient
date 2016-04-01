@@ -29,6 +29,7 @@ module Rorient
 
     def databases
       Config.databases.each do |name, config|
+        puts "#{name} - #{config}"
         db = Database.new(name, config)
         yield db if block_given?
       end
