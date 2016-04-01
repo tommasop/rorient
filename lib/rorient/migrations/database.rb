@@ -7,6 +7,7 @@ module Rorient
       attr_reader :name, :driver
 
       def initialize(name, options)
+        puts oprions
         @name    = name
         @server = options[:server]
         begin
@@ -47,7 +48,6 @@ module Rorient
       private
 
       def self.connect(options)
-        puts options
         Rorient.connect(
                          server: options[:host],
                          user: options[:username],
