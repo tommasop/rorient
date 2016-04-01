@@ -27,6 +27,13 @@ module Rorient
       end
     end
 
+    def databases
+      Config.databases.each do |name, config|
+        db = Database.new(name, config)
+        yield db if block_given?
+      end
+    end
+    
     def load_tasks!
       load 'rorient/migrations/tasks/migrate.rake'
       load 'rorient/migrations/tasks/seed.rake'
