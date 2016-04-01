@@ -30,6 +30,10 @@ module Rorient
       }
     end
 
+    def table_exists?(table_name)
+      !query.execute(query_text: URI.encode("SELECT FROM ( SELECT expand( classes ) FROM metadata:schema ) WHERE name = '#{table_name}'")).nil?
+    end
+
     def method_missing(name, *args, &block)
       if self.class.resources.keys.include?(name)
         resources[name] ||= self.class.resources[name].new(connection: connection, scope: @scope)
