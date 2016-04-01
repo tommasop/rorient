@@ -4,7 +4,7 @@ require 'erb'
 module Rorient
   module Migrations
     # Configuration module
-    # TODO: Configure to use with ENV settings ?
+    # 
     module Config
       extend self
 

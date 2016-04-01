@@ -47,16 +47,16 @@ module Rorient
       private
 
       def self.connect(options)
+        puts options
         Rorient.connect(
-                         server: options[:server],
-                         user: options[:user],
+                         server: options[:host],
+                         user: options[:username],
                          password: options[:password],
                          db_name: options[:database]
         )
       end
 
       def install_table
-        # TODO: check orientdb class existence
         return if @driver.table_exists?(HISTORY_TABLE)
 
         puts "[!] Installing `#{HISTORY_TABLE}` history table"
