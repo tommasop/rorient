@@ -7,9 +7,7 @@ module Rorient
       attr_reader :name, :driver
 
       def initialize(name, options)
-        puts options
         @name    = name
-        @server = options[:server]
         begin
           @driver = self.class.connect(options)
         rescue
@@ -61,7 +59,7 @@ module Rorient
 
         puts "[!] Installing `#{HISTORY_TABLE}` history table"
         # Schema changes in OrientDB ar not transactionable
-        @driver.batch.execute( Oj.load('{ "transaction" : false,
+        @driver.batch.execute( Oj.dump('{ "transaction" : false,
                                  "operations" : [
                                    {
                                      "type" : "script",
