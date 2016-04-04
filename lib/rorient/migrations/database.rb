@@ -59,7 +59,8 @@ module Rorient
         return if @driver.table_exists?(HISTORY_TABLE)
 
         puts "[!] Installing `#{HISTORY_TABLE}` history table"
-        @driver.batch.execute( Oj.load('{ "transaction" : true,
+        # Schema changes in OrientDB ar not transactionable
+        @driver.batch.execute( Oj.load('{ "transaction" : false,
                                  "operations" : [
                                    {
                                      "type" : "script",
@@ -69,7 +70,7 @@ module Rorient
                                                   "CREATE PROPERTY #{HISTORY_TABLE.to_s}.executed DATETIME",
                                                   "CREATE PROPERTY #{HISTORY_TABLE.to_s}.name STRING",
                                                   "CREATE PROPERTY #{HISTORY_TABLE.to_s}.type STRING",
-                                                  "CREATE INDEX ON #{HISTORY_TABLE.to_s} (name, type)" ]
+                                                  "CREATE INDEX #{HISTORY_TABLE.to_s}.time_type ON #{HISTORY_TABLE.to_s} (time, type) NOTUNIQUE_HASH_INDEX" ]
                                    }
                                  ]
                                }')
