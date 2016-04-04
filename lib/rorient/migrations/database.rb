@@ -59,7 +59,7 @@ module Rorient
         return if @driver.table_exists?(HISTORY_TABLE)
 
         puts "[!] Installing `#{HISTORY_TABLE}` history table"
-        @driver.batch.execute( { "transaction" : true,
+        @driver.batch.execute( Oj.load({ "transaction" : true,
                                  "operations" : [
                                    {
                                      "type" : "script",
@@ -72,7 +72,7 @@ module Rorient
                                                   "CREATE INDEX ON #{HISTORY_TABLE.to_s} (name, type)" ]
                                    }
                                  ]
-                               }
+                               })
                              )
         end
       end
