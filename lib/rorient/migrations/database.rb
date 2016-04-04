@@ -17,6 +17,7 @@ module Rorient
           puts "[+] Connected to `#{@name}` database using rorient adapter"
         end
         install_table
+        @driver
       end
 
       def migrate
