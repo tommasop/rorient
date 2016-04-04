@@ -74,7 +74,6 @@ module Rorient
                                  ]
                                }')
                              )
-        end
       end
     end
   end
