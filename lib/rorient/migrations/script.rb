@@ -70,11 +70,9 @@ module Rorient
       private
 
       def new?
-        # TODO: substitute sequel with Rorient
         history = @database.history
-        last = history.order(Sequel.asc(:time)).where(type: @type).last
-        is_new = history.where(time: @datetime, type: @type).count == 0
-
+        last = @database.query.execute(query_text: URL.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].last
+        is_new = @database.query.execute(query_text: URL.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
         puts "[!] #{self} datetime BEFORE last one executed !" if
         is_new && last && last[:time] > @datetime
 
@@ -86,7 +84,7 @@ module Rorient
         puts "    Info: #{self}"
         puts "    Benchmark: #{@benchmark}"
 
-        @database.history.insert(time: @datetime, name: @name,
+        @database.document.create(time: @datetime, name: @name,
                                  type: @type, executed: DateTime.now)
       end
     end

@@ -41,7 +41,7 @@ module Rorient
       end
 
       def history
-        @driver.query.execute(query_text: URI.encode("SELECT FROM #{HISTORY_TABLE}"))
+        HISTORY_TABLE
       end
 
       private
