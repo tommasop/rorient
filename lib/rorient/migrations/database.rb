@@ -7,15 +7,16 @@ module Rorient
       attr_reader :name, :driver
 
       def initialize(name, options)
+        puts options
         @name    = name
         @server = options[:server]
         begin
           @driver = self.class.connect(options)
         rescue
-          puts "[-] Could not connect to `#{@name}` database using #{@adapter} adapter"
+          puts "[-] Could not connect to `#{@name}` database using rorient adapter"
           raise
         else
-          puts "[+] Connected to `#{@name}` database using #{@adapter} adapter"
+          puts "[+] Connected to `#{@name}` database using rorient adapter"
         end
         install_table
       end
