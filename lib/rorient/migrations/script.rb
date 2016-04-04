@@ -72,8 +72,8 @@ module Rorient
       def new?
         puts @database
         history = @database.history
-        last = @database.connected_db.query.execute(query_text: URL.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].last
-        is_new = @database.connected_db.query.execute(query_text: URL.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
+        last = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].last
+        is_new = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
         puts "[!] #{self} datetime BEFORE last one executed !" if
         is_new && last && last[:time] > @datetime
 
