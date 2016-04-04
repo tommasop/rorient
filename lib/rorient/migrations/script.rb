@@ -5,7 +5,7 @@ require 'time'
 module Rorient
   module Migrations
     # Script class
-    #
+    # TODO: migrate all to Rorient db from Sequel
     class Script
       DELEGATED = [:name, :date, :time, :datetime, :type, :content, :path]
       attr_reader(*DELEGATED)

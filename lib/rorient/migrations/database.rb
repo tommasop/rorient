@@ -41,7 +41,7 @@ module Rorient
       end
 
       def history
-        @driver[HISTORY_TABLE]
+        @driver.query.execute(query_text: URI.encode("SELECT FROM #{HISTORY_TABLE}"))
       end
 
       private
@@ -59,16 +59,21 @@ module Rorient
         return if @driver.table_exists?(HISTORY_TABLE)
 
         puts "[!] Installing `#{HISTORY_TABLE}` history table"
-        # TODO: Create Rorient history table
-        @driver.create_table(HISTORY_TABLE) do
-          # rubocop:disable Style/SingleSpaceBeforeFirstArg
-          primary_key :id
-          Bignum      :time
-          DateTime    :executed
-          String      :name
-          String      :type
-          index       [:time, :type]
-          # rubocop:enable Style/SingleSpaceBeforeFirstArg
+        @driver.batch.execute( { "transaction" : true,
+                                 "operations" : [
+                                   {
+                                     "type" : "script",
+                                     "language" : "sql",
+                                     "script" : [ "CREATE CLASS #{HISTORY_TABLE.to_s}",
+                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.time DOUBLE",
+                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.executed DATETIME",
+                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.name STRING",
+                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.type STRING",
+                                                  "CREATE INDEX ON #{HISTORY_TABLE.to_s} (name, type)" ]
+                                   }
+                                 ]
+                               }
+                             )
         end
       end
     end
