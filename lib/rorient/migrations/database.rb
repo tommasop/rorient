@@ -17,7 +17,6 @@ module Rorient
           puts "[+] Connected to `#{@name}` database using rorient adapter"
         end
         install_table
-        @driver
       end
 
       def migrate
@@ -42,6 +41,10 @@ module Rorient
 
       def history
         HISTORY_TABLE
+      end
+
+      def connected_db
+        @driver
       end
 
       private
