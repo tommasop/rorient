@@ -59,20 +59,20 @@ module Rorient
 
         puts "[!] Installing `#{HISTORY_TABLE}` history table"
         # Schema changes in OrientDB ar not transactionable
-        @driver.batch.execute( Oj.dump('{ "transaction" : false,
-                                 "operations" : [
+        @driver.batch.execute({ transaction: false,
+                                 operations: [
                                    {
-                                     "type" : "script",
-                                     "language" : "sql",
-                                     "script" : [ "CREATE CLASS #{HISTORY_TABLE.to_s}",
-                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.time DOUBLE",
-                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.executed DATETIME",
-                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.name STRING",
-                                                  "CREATE PROPERTY #{HISTORY_TABLE.to_s}.type STRING",
-                                                  "CREATE INDEX #{HISTORY_TABLE.to_s}.time_type ON #{HISTORY_TABLE.to_s} (time, type) NOTUNIQUE_HASH_INDEX" ]
+                                     type: "script",
+                                     language: "sql",
+                                     script: [ "CREATE CLASS #{HISTORY_TABLE.to_s}",
+                                               "CREATE PROPERTY #{HISTORY_TABLE.to_s}.time DOUBLE",
+                                               "CREATE PROPERTY #{HISTORY_TABLE.to_s}.executed DATETIME",
+                                               "CREATE PROPERTY #{HISTORY_TABLE.to_s}.name STRING",
+                                               "CREATE PROPERTY #{HISTORY_TABLE.to_s}.type STRING",
+                                               "CREATE INDEX #{HISTORY_TABLE.to_s}.time_type ON #{HISTORY_TABLE.to_s} (time, type) NOTUNIQUE_HASH_INDEX" ]
                                    }
                                  ]
-                               }')
+                               }
                              )
       end
     end
