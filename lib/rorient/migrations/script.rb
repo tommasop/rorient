@@ -35,7 +35,6 @@ module Rorient
                               }
                 ]
             })
-          end
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
           puts "    Info: #{self}"
