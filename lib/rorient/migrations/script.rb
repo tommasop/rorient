@@ -35,8 +35,7 @@ module Rorient
                               }
                 ]
             }
-          puts my_migration
-          #driver.batch.execute(my_migration)
+          driver.batch.execute(my_migration)
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
           puts "    Info: #{self}"
