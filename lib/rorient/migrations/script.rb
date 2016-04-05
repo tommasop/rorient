@@ -22,6 +22,7 @@ module Rorient
         @database = db
         return false unless new?
         driver = @database.driver
+        puts statements
         begin
           driver.batch.execute(
             { transaction: true,
