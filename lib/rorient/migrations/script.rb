@@ -24,8 +24,7 @@ module Rorient
         driver = @database.driver
         puts statements
         begin
-          driver.batch.execute(
-            { transaction: true,
+           my_migration = { transaction: true,
                 operations: [
                               {
                                 type: "script",
@@ -35,7 +34,9 @@ module Rorient
                                 ]
                               }
                 ]
-            })
+            }
+          puts my_migration
+          #driver.batch.execute(my_migration)
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
           puts "    Info: #{self}"
