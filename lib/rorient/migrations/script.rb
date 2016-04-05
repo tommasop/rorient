@@ -56,8 +56,10 @@ module Rorient
         separator = Rorient::Migrations::Config.options[:separator]
         if separator
           statements = @content.split(separator)
+          puts statements
           statements.collect!(&:strip)
           statements.reject(&:empty?)
+          puts statements
         else
           [content]
         end
