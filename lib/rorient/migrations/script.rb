@@ -22,7 +22,6 @@ module Rorient
         @database = db
         return false unless new?
         driver = @database.driver
-        puts statements
         begin
            my_migration = { transaction: true,
                 operations: [
