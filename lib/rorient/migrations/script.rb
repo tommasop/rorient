@@ -23,10 +23,18 @@ module Rorient
         return false unless new?
         driver = @database.driver
         begin
-          driver.transaction do
-            @benchmark = Benchmark.measure do
-              statements.each { |query| driver.run(query) }
-            end
+          driver.batch.execute(
+            { transaction: true,
+                operations: [
+                              {
+                                type: "script",
+                                language: "sql",
+                                script: [ 
+                                  statements 
+                                ]
+                              }
+                ]
+            })
           end
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
@@ -56,10 +64,8 @@ module Rorient
         separator = Rorient::Migrations::Config.options[:separator]
         if separator
           statements = @content.split(separator)
-          puts statements
           statements.collect!(&:strip)
           statements.reject(&:empty?)
-          puts statements
         else
           [content]
         end
