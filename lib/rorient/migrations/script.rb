@@ -23,7 +23,7 @@ module Rorient
         return false unless new?
         driver = @database.driver
         begin
-           my_migration = { transaction: true,
+           my_migration = { transaction: false,
                 operations: [
                               {
                                 type: "script",
