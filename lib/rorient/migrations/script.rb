@@ -28,9 +28,7 @@ module Rorient
                               {
                                 type: "script",
                                 language: "sql",
-                                script: [ 
-                                  statements 
-                                ]
+                                script: statements 
                               }
                 ]
             }
