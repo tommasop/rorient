@@ -27,7 +27,7 @@ module Rorient
                               {
                                 type: "script",
                                 language: "sql",
-                                script: statements 
+                                script: self.send("#{@type}_statements") 
                               }
                 ]
             }
@@ -54,6 +54,23 @@ module Rorient
         end
 
         files.sort_by(&:datetime).map { |file| new(file) }
+      end
+
+      def migration_statements
+        if (statements & ["--UP", "--DOWN"]).any?  
+          begin_at = statements.index("--UP")+1
+          end_at = statements.index("--DOWN")-1
+          statements(statements.index(begin_at..end_at)  
+        else
+          statements
+        end
+      end
+      
+      def rollback_statements
+        if statements.include?("--DOWN")
+          begin_at = statements.index("--DOWN")+1
+          statements(begin_at..-1) 
+        end
       end
 
       def statements
@@ -94,7 +111,7 @@ module Rorient
         puts "    Info: #{self}"
         puts "    Benchmark: #{@benchmark}"
 
-        @database.connected_db.document.create(time: @datetime, name: @name,
+        @database.connected_db.document.create(@class: HISTORY_TABLE.to_s, time: @datetime, name: @name,
                                  type: @type, executed: DateTime.now)
       end
     end

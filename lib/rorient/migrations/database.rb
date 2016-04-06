@@ -68,12 +68,15 @@ module Rorient
                                    {
                                      type: "script",
                                      language: "sql",
-                                     script: [ "CREATE CLASS #{HISTORY_TABLE.to_s}",
+                                     script: [ "BEGIN",
+                                               "CREATE CLASS #{HISTORY_TABLE.to_s}",
                                                "CREATE PROPERTY #{HISTORY_TABLE.to_s}.time DOUBLE",
                                                "CREATE PROPERTY #{HISTORY_TABLE.to_s}.executed DATETIME",
                                                "CREATE PROPERTY #{HISTORY_TABLE.to_s}.name STRING",
                                                "CREATE PROPERTY #{HISTORY_TABLE.to_s}.type STRING",
-                                               "CREATE INDEX #{HISTORY_TABLE.to_s}.time_type ON #{HISTORY_TABLE.to_s} (time, type) NOTUNIQUE_HASH_INDEX" ]
+                                               "CREATE INDEX #{HISTORY_TABLE.to_s}.time_type ON #{HISTORY_TABLE.to_s} (time, type) NOTUNIQUE_HASH_INDEX",
+                                               "COMMIT"
+                                             ]
                                    }
                                  ]
                                }

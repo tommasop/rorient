@@ -20,6 +20,10 @@ module Rorient
       databases(&:seed)
     end
 
+    def rollback
+      databases(&:rollback)
+    end
+
     def scripts
       Config.databases.each do |name, _config|
         Migration.find(name).each { |migration| puts migration }
