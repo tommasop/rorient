@@ -112,9 +112,13 @@ module Rorient
         puts "[+] Successfully executed #{@type}, name: #{@name}"
         puts "    Info: #{self}"
         puts "    Benchmark: #{@benchmark}"
-
+         
         @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
-                                               type: @type, executed: Time.now.to_s)
+                                               type: @type, executed: Time.now.to_s) if @type == "migration"
+        if @type == "rollback"
+          migration_record = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{@database.history} WHERE type = '" + @type + "' AND time = '" + @time + "' LIMIT 1"))[:result].first
+          @database.connected_db.document.delete(rid: migration_record["@rid"]) if migration_record 
+        end
       end
     end
   end
