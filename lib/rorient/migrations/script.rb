@@ -113,7 +113,7 @@ module Rorient
         puts "    Info: #{self}"
         puts "    Benchmark: #{@benchmark}"
 
-        @database.connected_db.document.create("@class": HISTORY_TABLE.to_s, time: @datetime, name: @name,
+        @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
                                  type: @type, executed: DateTime.now)
       end
     end
