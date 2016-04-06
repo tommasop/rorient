@@ -114,7 +114,7 @@ module Rorient
         puts "    Benchmark: #{@benchmark}"
 
         @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
-                                 type: @type, executed: DateTime.now)
+                                               type: @type, executed: Time.now.to_s)
       end
     end
   end
