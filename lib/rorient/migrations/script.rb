@@ -57,7 +57,7 @@ module Rorient
       end
 
       def migration_statements
-        if (statements & ["--UP", "--DOWN"]).any?  
+        if (statements & ["--UP", "--DOWN"]).any? == true 
           begin_at = statements.index("--UP")+1
           end_at = statements.index("--DOWN")-1
           statements(statements.index(begin_at..end_at)  
