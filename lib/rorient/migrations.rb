@@ -40,6 +40,7 @@ module Rorient
     
     def load_tasks!
       load 'rorient/migrations/tasks/migrate.rake'
+      load 'rorient/migrations/tasks/rollback.rake'
       load 'rorient/migrations/tasks/seed.rake'
       load 'rorient/migrations/tasks/scripts.rake'
     end
