@@ -60,7 +60,7 @@ module Rorient
         if (statements & ["--UP", "--DOWN"]).any?
           begin_at = statements.index("--UP")+1
           end_at = statements.index("--DOWN")-1
-          statements(statements.index(begin_at..end_at)) 
+          statements[statements.index(begin_at..end_at)] 
         else
           statements
         end
@@ -69,7 +69,7 @@ module Rorient
       def rollback_statements
         if statements.include?("--DOWN")
           begin_at = statements.index("--DOWN")+1
-          statements(begin_at..-1) 
+          statements[begin_at..-1] 
         end
       end
 
