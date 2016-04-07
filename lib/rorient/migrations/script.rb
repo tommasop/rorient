@@ -44,7 +44,7 @@ module Rorient
 
       def unexecute(db)
         @database = db
-        puts "----------------> #{new?} #{@type}"
+        puts "----------------> #{new?}"
         return false if new?
         @type = "rollback"
         driver = @database.driver
@@ -114,10 +114,9 @@ module Rorient
         if @database.connected_db.query.execute(query_text: URI.encode("SELECT NULL FROM #{history} LIMIT 1"))[:result].nil?
           true
         else
-          last = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].last
+          last = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].first
           is_new = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
-          puts "[!] #{self} datetime BEFORE last one executed !" if
-          is_new && last && last[:time] > @datetime
+          puts "[!] #{self} datetime BEFORE last one executed !" if is_new && last && last[:time] > @datetime
           
           is_new
         end
