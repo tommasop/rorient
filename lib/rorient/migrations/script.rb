@@ -114,8 +114,10 @@ module Rorient
         if @database.connected_db.query.execute(query_text: URI.encode("SELECT NULL FROM #{history} LIMIT 1"))[:result].nil?
           true
         else
+          puts "-----------------> NO NULL"
           last = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].first
           is_new = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
+          puts "----------------> #{is_new} #{@type}"
           puts "[!] #{self} datetime BEFORE last one executed !" if is_new && last && last[:time] > @datetime
           
           is_new
