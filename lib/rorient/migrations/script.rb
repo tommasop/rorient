@@ -31,6 +31,7 @@ module Rorient
                               }
                 ]
             }
+          puts my_migration
           driver.batch.execute(my_migration)
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
@@ -47,7 +48,7 @@ module Rorient
         return false if new?
         driver = @database.driver
         begin
-           my_migration = { transaction: false,
+           my_rollback = { transaction: false,
                 operations: [
                               {
                                 type: "script",
@@ -56,6 +57,7 @@ module Rorient
                               }
                 ]
             }
+          puts my_rollback
           driver.batch.execute(my_migration)
         rescue
           puts "[-] Error while executing rollback #{@name} !"
@@ -129,9 +131,11 @@ module Rorient
         
         case @type 
         when "migration"
+          puts "[+] Migrating history table"
           @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
                                                type: @type, executed: Time.now.to_s) if @type == "migration"
         when "rollback"
+          puts "[+] Rolling back history table"
           migration_record = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{@database.history} WHERE type = '" + @type + "' AND time = '" + @time + "' LIMIT 1"))[:result].first
           @database.connected_db.document.delete(rid: migration_record["@rid"]) if migration_record 
         end
