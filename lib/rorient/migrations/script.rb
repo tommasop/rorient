@@ -91,7 +91,7 @@ module Rorient
           statements.reject(&:empty?)
           if (statements & ["--#{statement_type}", "--end-#{statement_type}"]).any?
             begin_at = statements.index("--#{statement_type}")+1
-            end_at = m_statements.index("--end-#{statement_type}")-1
+            end_at = statements.index("--end-#{statement_type}")-1
             statements[begin_at..end_at] 
           else
             statements
