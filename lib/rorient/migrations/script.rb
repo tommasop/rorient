@@ -43,10 +43,10 @@ module Rorient
       end
 
       def unexecute(db)
-        @type = "rollback"
         @database = db
         puts "----------------> #{new?}"
         return false if new?
+        @type = "rollback"
         driver = @database.driver
         begin
            my_rollback = { transaction: false,
