@@ -109,7 +109,6 @@ module Rorient
       private
 
       def new?
-        puts @database
         history = @database.history
         # If migrations table is empty
         if @database.connected_db.query.execute(query_text: URI.encode("SELECT NULL FROM #{history} LIMIT 1"))[:result].nil?
@@ -119,7 +118,7 @@ module Rorient
           is_new = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
           puts "[!] #{self} datetime BEFORE last one executed !" if
           is_new && last && last[:time] > @datetime
-
+          
           is_new
         end
       end
