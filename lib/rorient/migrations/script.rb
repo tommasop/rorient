@@ -27,7 +27,7 @@ module Rorient
                               {
                                 type: "script",
                                 language: "sql",
-                                script: self.send("#{@type}_statements") 
+                                script: statements(@type) 
                               }
                 ]
             }
@@ -39,6 +39,32 @@ module Rorient
         else
           true & on_success
         end
+      end
+
+      def unexecute(db)
+        @type = "rollback"
+        @database = db
+        return false if new?
+        driver = @database.driver
+        begin
+           my_migration = { transaction: false,
+                operations: [
+                              {
+                                type: "script",
+                                language: "sql",
+                                script: statements(@type) 
+                              }
+                ]
+            }
+          driver.batch.execute(my_migration)
+        rescue
+          puts "[-] Error while executing rollback #{@name} !"
+          puts "    Info: #{self}"
+          raise
+        else
+          true & on_success
+        end
+
       end
 
       def self.find(database, type)
@@ -56,31 +82,19 @@ module Rorient
         files.sort_by(&:datetime).map { |file| new(file) }
       end
 
-      def migration_statements
-        m_statements = statements
-        if (m_statements & ["--UP", "--DOWN"]).any?
-          begin_at = m_statements.index("--UP")+1
-          end_at = m_statements.index("--DOWN")-1
-          m_statements[begin_at..end_at] 
-        else
-          statements
-        end
-      end
-      
-      def rollback_statements
-        r_statements = statements
-        if r_statements.include?("--DOWN")
-          begin_at = r_statements.index("--DOWN")+1
-          r_statements[begin_at..-1] 
-        end
-      end
-
-      def statements
+      def statements(statement_type=nil)
         separator = Rorient::Migrations::Config.options[:separator]
         if separator
           statements = @content.split(separator)
           statements.collect!(&:strip)
           statements.reject(&:empty?)
+          if (statements & ["--#{statement_type}", "--end-#{statement_type}"]).any?
+            begin_at = statements.index("--#{statement_type}")+1
+            end_at = m_statements.index("--end-#{statement_type}")-1
+            statements[begin_at..end_at] 
+          else
+            statements
+          end
         else
           [content]
         end
@@ -112,10 +126,12 @@ module Rorient
         puts "[+] Successfully executed #{@type}, name: #{@name}"
         puts "    Info: #{self}"
         puts "    Benchmark: #{@benchmark}"
-         
-        @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
+        
+        case @type 
+        when "migration"
+          @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
                                                type: @type, executed: Time.now.to_s) if @type == "migration"
-        if @type == "rollback"
+        when "rollback"
           migration_record = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{@database.history} WHERE type = '" + @type + "' AND time = '" + @time + "' LIMIT 1"))[:result].first
           @database.connected_db.document.delete(rid: migration_record["@rid"]) if migration_record 
         end

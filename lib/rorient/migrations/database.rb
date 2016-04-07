@@ -29,6 +29,19 @@ module Rorient
         end
       end
 
+      def rollback(steps:0)
+        steps -= 1 if steps != 0
+        rollbacks = Rorient::Migrations::Migration.find(@name)
+        if !rollbacks.empty?
+          puts "[i] Executing rollback for `#{@name}` database"
+          # Rollback is executed only on the steps
+          # performed migration
+          rollbacks[0..steps].each { |rollback| rollback.unexecute(self) }
+        else
+          puts "[i] No rollback possible for `#{@name}` database"
+        end
+      end
+
       def seed
         seeds = Rorient::Migration::Seed.find(@name)
         if !seeds.empty?
