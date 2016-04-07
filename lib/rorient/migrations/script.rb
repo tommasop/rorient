@@ -44,7 +44,6 @@ module Rorient
 
       def unexecute(db)
         @database = db
-        puts "----------------> #{new?}"
         return false if new?
         @type = "rollback"
         driver = @database.driver
@@ -111,8 +110,7 @@ module Rorient
       def new?
         history = @database.history
         # If migrations table is empty
-        if @database.connected_db.query.execute(query_text: URI.encode("SELECT NULL FROM #{history} LIMIT 1"))[:result].count == 0
-          puts "-----------------> NULL"
+        if @database.connected_db.query.execute(query_text: URI.encode("SELECT NULL FROM #{history} LIMIT 1"))[:result].nil?
           true
         else
           last = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].first
