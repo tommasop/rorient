@@ -44,8 +44,8 @@ module Rorient
 
       def unexecute(db)
         @type = "rollback"
-        puts " ---------------> #{db} #{@type} "
         @database = db
+        puts "----------------> #{new?}"
         return false if new?
         driver = @database.driver
         begin
@@ -58,8 +58,7 @@ module Rorient
                               }
                 ]
             }
-          puts my_rollback
-          driver.batch.execute(my_migration)
+          driver.batch.execute(my_rollback)
         rescue
           puts "[-] Error while executing rollback #{@name} !"
           puts "    Info: #{self}"
