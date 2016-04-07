@@ -32,7 +32,7 @@ module Rorient
       def rollback(steps:0)
         steps -= 1 if steps != 0
         rollbacks = Rorient::Migrations::Migration.find(@name)
-        puts rollbacks
+        puts " ---------------> #{steps} "
         if !rollbacks.empty?
           puts "[i] Executing rollback for `#{@name}` database"
           # Rollback is executed only on the steps
