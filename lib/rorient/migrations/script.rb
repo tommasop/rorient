@@ -44,7 +44,7 @@ module Rorient
 
       def unexecute(db)
         @database = db
-        puts "----------------> #{new?}"
+        puts "----------------> #{new?} #{@type}"
         return false if new?
         @type = "rollback"
         driver = @database.driver
