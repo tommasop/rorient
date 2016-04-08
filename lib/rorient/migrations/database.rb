@@ -56,10 +56,6 @@ module Rorient
         HISTORY_TABLE
       end
 
-      def connected_db
-        @driver
-      end
-
       private
 
       def self.connect(options)

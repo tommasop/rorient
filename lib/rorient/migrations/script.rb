@@ -109,11 +109,11 @@ module Rorient
       def new?
         history = @database.history
         # If migrations table is empty
-        if @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} LIMIT 1"))[:result].empty?
+        if @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} LIMIT 1"))[:result].empty?
           true
         else
-          last = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].first
-          is_new = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
+          last = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].first
+          is_new = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
           puts "[!] #{self} datetime BEFORE last one executed !" if is_new && last && last[:time] > @datetime
           
           is_new
@@ -128,12 +128,12 @@ module Rorient
         case @type 
         when "migration"
           puts "[+] Migrating history table"
-          @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
+          @database.driver.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
                                                type: @type, executed: Time.now.to_s)
         when "rollback"
           puts "[+] Rolling back history table"
-          migration_record = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{@database.history} WHERE type = '" + @type + "' AND time = '" + @time + "' LIMIT 1"))[:result].first
-          @database.connected_db.document.delete(rid: migration_record["@rid"]) if migration_record 
+          migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{@database.history} WHERE type = '" + @type + "' AND time = '" + @time + "' LIMIT 1"))[:result].first
+          @database.driver.document.delete(rid: migration_record["@rid"]) if migration_record 
         end
       end
     end
