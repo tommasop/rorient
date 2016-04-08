@@ -34,7 +34,7 @@ module Rorient
     def databases
       Config.databases.each do |name, config|
         db = Database.new(name, config)
-        puts db
+        puts db.driver
         yield db if block_given?
       end
     end
