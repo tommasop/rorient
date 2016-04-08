@@ -31,7 +31,6 @@ module Rorient
                               }
                 ]
             }
-          puts my_migration
           driver.batch.execute(my_migration)
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
@@ -57,6 +56,7 @@ module Rorient
                               }
                 ]
             }
+          puts my_rollback
           driver.batch.execute(my_rollback)
         rescue
           puts "[-] Error while executing rollback #{@name} !"
@@ -110,11 +110,14 @@ module Rorient
       def new?
         history = @database.history
         # If migrations table is empty
+        puts @database.connected_db.query.execute(query_text: URI.encode("SELECT NULL FROM #{history} LIMIT 1"))
         if @database.connected_db.query.execute(query_text: URI.encode("SELECT NULL FROM #{history} LIMIT 1"))[:result].nil?
           true
         else
           last = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type} ORDER BY time DESC LIMIT 1"))[:result].first
+          puts last
           is_new = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = #{@type}"))[:result].count == 0
+          puts is_new
           puts "[!] #{self} datetime BEFORE last one executed !" if is_new && last && last[:time] > @datetime
           
           is_new
@@ -130,7 +133,7 @@ module Rorient
         when "migration"
           puts "[+] Migrating history table"
           @database.connected_db.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
-                                               type: @type, executed: Time.now.to_s) if @type == "migration"
+                                               type: @type, executed: Time.now.to_s)
         when "rollback"
           puts "[+] Rolling back history table"
           migration_record = @database.connected_db.query.execute(query_text: URI.encode("SELECT FROM #{@database.history} WHERE type = '" + @type + "' AND time = '" + @time + "' LIMIT 1"))[:result].first
