@@ -133,7 +133,7 @@ module Rorient
                                                type: @type, executed: Time.now.to_s)
         when "rollback"
           puts "[+] Rolling back history table"
-          migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY executed DESC LIMIT 1"))[:result].first
+          migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = migration AND time = #{@datetime.to_s} ORDER BY executed DESC LIMIT 1"))[:result].first
           @database.driver.document.delete(rid: migration_record["@rid"]) if migration_record 
         end
       end
