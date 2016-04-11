@@ -107,7 +107,7 @@ module Rorient
       private
 
       def new?
-        history = @database.history
+        history = @database.history.to_s
         # If migrations table is empty
         if @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} LIMIT 1"))[:result].empty?
           true
@@ -125,14 +125,15 @@ module Rorient
         puts "    Info: #{self}"
         puts "    Benchmark: #{@benchmark}"
         
+        history = @database.history.to_s
         case @type 
         when "migration"
           puts "[+] Migrating history table"
-          @database.driver.document.create("@class": @database.history.to_s, time: @datetime, name: @name,
+          @database.driver.document.create("@class": history, time: @datetime, name: @name,
                                                type: @type, executed: Time.now.to_s)
         when "rollback"
           puts "[+] Rolling back history table"
-          migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{@database.history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY executed DESC LIMIT 1"))[:result].first
+          migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY executed DESC LIMIT 1"))[:result].first
           @database.driver.document.delete(rid: migration_record["@rid"]) if migration_record 
         end
       end
