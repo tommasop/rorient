@@ -32,4 +32,25 @@ has_many "friends", vertex: "User", edge: "connections"
 belongs_to "friend", vertex: "User", edge: "connections"
 ```
 
+About migrations you can have the usual `db/migrations` directory but need
+to use **sql** files with this timestamp naming convention:
+
+`YYYYMMGG_HHmmss_migration_name.sql`
+
+In the migration file you need to use `--migration;`and `--end-migration;`and `--rollback;`and `--end-rollback;`
+tags like this:
+
+```
+--migration;
+CREATE CLASS Planimetry EXTENDS V;
+CREATE PROPERTY Planimetry.name STRING;
+CREATE PROPERTY Planimetry.unit STRING;
+--end-migration;
+--rollback;
+DROP Planimetry UNSAFE;
+--end-rollback;
+```
+
+Then use the familiar `rorientmigrations:db:migrate` and `rorientmigrations:db:rollback`rake tasks.
+
 

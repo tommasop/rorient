@@ -9,6 +9,7 @@ module Rorient
       def initialize(name, options)
         @name    = name
         begin
+          puts "Database connection options #{options}"
           @driver = self.class.connect(options)
         rescue
           puts "[-] Could not connect to `#{@name}` database using rorient adapter"
