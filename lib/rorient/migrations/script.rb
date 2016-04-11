@@ -62,6 +62,7 @@ module Rorient
           puts "    Info: #{self}"
           raise
         else
+          @type = "migration"
           true & on_success
         end
 
