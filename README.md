@@ -51,6 +51,6 @@ DROP Planimetry UNSAFE;
 --end-rollback;
 ```
 
-Then use the familiar `rorientmigrations:db:migrate` and `rorientmigrations:db:rollback`rake tasks.
+Then use the familiar `rorient:db:migrate` and `rorient:db:rollback`rake tasks.
 
 

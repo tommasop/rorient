@@ -1,4 +1,4 @@
-namespace :rorientmigrations do
+namespace :rorient do
   namespace :db do
     desc 'Seed database'
     task :seed do
