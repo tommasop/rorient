@@ -53,4 +53,24 @@ DROP Planimetry UNSAFE;
 
 Then use the familiar `rorient:db:migrate` and `rorient:db:rollback`rake tasks.
 
+## Directed Graph relations
+
+Graph relations are simply direct links between objects this means you could have multiple
+links between the same objects.
+If you need to enforce the graph direction in the classic relationship has_many/belongs_to
+fashion you need to manually define it in the edge creation like this:
+
+```
+--migration;
+CREATE CLASS OrientedConnection EXTENDS E;
+CREATE PROPERTY OrientedConnection.out LINK;
+CREATE PROPERTY OrientedConnection.in LINK;
+ALTER PROPERTY OrientedConnection.out MANDATORY=true;
+ALTER PROPERTY OrientedConnection.in MANDATORY=true;
+CREATE INDEX UniqueOrientedConnection ON OrientedConnection(out,in) UNIQUE;
+--end-migration;
+--rolback;
+DROP CLASS OrientedConnection UNSAFE;
+--end-rollback;
+```
 
