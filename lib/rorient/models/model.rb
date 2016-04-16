@@ -35,10 +35,6 @@ module Rorient
       subclass.instance_variable_set(:@orientdb, @orientdb.dup) unless @orientdb.nil?
     end
 
-    def orientdb
-      self.class.send(orientdb)
-    end
-   
     def self.mutex
       @@mutex ||= Mutex.new
     end
@@ -268,7 +264,7 @@ module Rorient
         return 3150
       when 1
         return 6300
-      default
+      else
         return nil
       end  
     end

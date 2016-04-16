@@ -1,34 +1,34 @@
-require 'rorient/version'
-require 'resource_kit'
-require 'oj'
-require 'active_support/inflector'
-require 'active_support/core_ext/object/blank'
-require 'securerandom'
+require "rorient/version"
+require "resource_kit"
+require "oj"
+require "active_support/inflector"
+require "active_support/core_ext/object/blank"
+require "securerandom"
 
 # Always parse string keys into symbols
 Oj.default_options = {:symbol_keys => true}
 
 module Rorient
-  autoload :Client, 'rorient/client'
+  autoload :Client, "rorient/client"
   
   # Base Model
-  autoload :Rid, 'rorient/models/rid'
-  autoload :Model, 'rorient/models/model'
+  autoload :Rid, "rorient/models/rid"
+  autoload :Model, "rorient/models/model"
 
   # Resources
-  #autoload :Server, 'rorient/resources/server'
-  autoload :DocumentResource, 'rorient/resources/document_resource'
-  autoload :OClassResource, 'rorient/resources/oclass_resource'
-  autoload :OPropertyResource, 'rorient/resources/oproperty_resource'
-  autoload :QueryResource, 'rorient/resources/query_resource'
-  autoload :CommandResource, 'rorient/resources/command_resource'
-  autoload :BatchResource, 'rorient/resources/batch_resource'
+  #autoload :Server, "rorient/resources/server"
+  autoload :DocumentResource, "rorient/resources/document_resource"
+  autoload :OClassResource, "rorient/resources/oclass_resource"
+  autoload :OPropertyResource, "rorient/resources/oproperty_resource"
+  autoload :QueryResource, "rorient/resources/query_resource"
+  autoload :CommandResource, "rorient/resources/command_resource"
+  autoload :BatchResource, "rorient/resources/batch_resource"
 
   # Utils
-  autoload :ErrorHandlingResourceable, 'rorient/error_handling_resourceable'
+  autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"
 
   # Migrations
-  autoload :Migrations, 'rorient/migrations'
+  autoload :Migrations, "rorient/migrations"
 
   # Errors
   

@@ -1,4 +1,4 @@
 require "rorient"
 require "minitest/autorun"
-require "minitest-colorize"
+require "purdytest"
 
