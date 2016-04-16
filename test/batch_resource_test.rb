@@ -1,6 +1,5 @@
-require File.expand_path('../../helper', __FILE__)
+require "helper" 
 
-class TestBatchResource < Rorient::TestCase
   UP_STATEMENTS = { transaction: false,
                        operations: [
                          {
@@ -30,12 +29,10 @@ class TestBatchResource < Rorient::TestCase
                        ]
                      }
 
-  def test_statements_execution
-    assert_equal({:result=>[{:@type=>"d", :@version=>0, :value=>0, :@fieldTypes=>"value=l"}]}, @db.batch.execute(UP_STATEMENTS))
+describe "BatchResource" do
+
+  it "does something" do
+    true.must_equal false
   end
 
-  def test_statement_failure_on_repetition
-    assert_includes(@db.batch.execute(UP_STATEMENTS), ":code=>500")
-  end
 end
-
