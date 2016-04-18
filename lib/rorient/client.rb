@@ -36,7 +36,6 @@ module Rorient
     end
 
     def create_table(table_name)
-      properties = []
       oclass.batch.execute(class_name: table_name)
     end
 
