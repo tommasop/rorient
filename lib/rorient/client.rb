@@ -36,7 +36,11 @@ module Rorient
     end
 
     def create_table(table_name)
-      oclass.batch.execute(class_name: table_name)
+      oclass.create(class_name: table_name)
+    end
+    
+    def delete_table(table_name)
+      oclass.delete(class_name: table_name)
     end
 
     def method_missing(name, *args, &block)

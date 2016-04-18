@@ -7,6 +7,7 @@ module Rorient
         path { "/class/#{database}/:class_name" }
         verb :get
         handler(200) { |response| Oj.load(response.body) }
+        #handler(401) { |response| puts response.body }
         handler(404) { |response| nil }
       end
 
@@ -15,6 +16,7 @@ module Rorient
         verb :post
         # body { |object| Oj.dump(object, mode: :compat) }
         handler(201) { |response|  response.body }
+        #handler(401) { |response| puts response.body }
         # handler(422) { |response| ErrorMapping.fail_with(FailedCreate, response.body) }
       end
 
@@ -26,11 +28,12 @@ module Rorient
       #  # handler(422) { |response| ErrorMapping.fail_with(FailedCreate, response.body) }
       #end
 
-      #action :delete do
-      #  path { "/document/#{database}/:rid" }
-      #  verb :delete
-      #  handler(204) { |response| true }
-      #end
+      action :delete do
+        path { "/class/#{database}/:class_name" }
+        verb :delete
+        handler(204) { |response| true }
+        #handler(401) { |response| puts response.body }
+      end
 
       #action :actions, 'GET /document/:id/actions' do
       #  query_keys :per_page, :page
