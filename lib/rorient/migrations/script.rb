@@ -22,16 +22,7 @@ module Rorient
         return false unless new?
         driver = @database.driver
         begin
-           my_migration = { transaction: false,
-                operations: [
-                              {
-                                type: "script",
-                                language: "sql",
-                                script: statements(@type) 
-                              }
-                ]
-            }
-          driver.batch.execute(my_migration)
+           driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash)
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
           puts "    Info: #{self}"
@@ -46,17 +37,7 @@ module Rorient
         @type = "rollback"
         driver = @database.driver
         begin
-           my_rollback = { transaction: false,
-                operations: [
-                              {
-                                type: "script",
-                                language: "sql",
-                                script: statements(@type) 
-                              }
-                ]
-            }
-          puts my_rollback
-          driver.batch.execute(my_rollback)
+          driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash)
         rescue
           puts "[-] Error while executing rollback #{@name} !"
           puts "    Info: #{self}"
