@@ -12,8 +12,8 @@ module Rorient
       @statements = statements
     end
 
-    def generate_hash
-      { transaction: false, operations: [ { type: "script", language: "sql", script: @statements } ] }
+    def generate_hash(with_transaction: false)
+      { transaction: with_transaction, operations: [ { type: "script", language: "sql", script: @statements } ] }
     end
   end
 end

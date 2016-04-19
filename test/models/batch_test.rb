@@ -34,6 +34,7 @@ describe "Rorient::Batch" do
   end
 
   it "must enable a transaction if asked to" do
-    skip("TODO")
+    rorient_batch = Rorient::Batch.new
+    rorient_batch.generate_hash(with_transaction: true)[:transaction].must_equal true
   end
 end
