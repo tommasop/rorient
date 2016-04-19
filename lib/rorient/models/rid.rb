@@ -1,16 +1,28 @@
 module Rorient
   class Rid
-    def self.get(atts={})
-      case 
-      when atts.class == String
-        atts.gsub("#",'')
-      when atts.keys.include?(:@rid)
-        atts[:@rid].gsub("#",'')
-      when atts.keys.include?(:rid)
-        atts[:rid].gsub("#",'')
+    WrongRidFormat = Class.new(StandardError) 
+    NoRidFound = Class.new(StandardError) 
+
+    attr_accessor :rid
+    
+    def initialize(rid_obj:)
+      @rid = rid_obj 
+      extract_rid if rid_obj.is_a? Hash
+      check_rid
+    end
+
+    def extract_rid
+      if @rid.keys.include?(:@rid)
+        @rid = @rid[:@rid] 
+      elsif @rid.keys.include?(:rid)
+        @rid = @rid[:rid] 
       else
-        nil
+        raise NoRidFound
       end
+    end
+
+    def check_rid
+      raise WrongRidFormat unless @rid.match(/(#?\d+:{1}\d+)/) 
     end
   end
 end
