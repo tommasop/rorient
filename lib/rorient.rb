@@ -13,6 +13,7 @@ module Rorient
   
   # Base Model
   autoload :Rid, "rorient/models/rid"
+  autoload :Batch, "rorient/models/batch"
   autoload :Model, "rorient/models/model"
 
   # Resources
