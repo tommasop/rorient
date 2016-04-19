@@ -10,7 +10,6 @@ module Rorient
     # class than that declared in the outs or ins relations
     class DifferentVertexClassError < StandardError; end
     class NoEdgeClassError < StandardError; end  
-    class MissingRID < Error; end
     
     # The client to connect to the OrientDB HTTP API
     # Use this if you want to do quick ad hoc orientdb commands against the
@@ -272,7 +271,7 @@ module Rorient
     def initialize(atts={})
       @attributes = {}
       @_memo = {}
-      @rid = Rid.get(atts) 
+      @rid = Rid.new(rid_obj: atts).rid 
       @version = atts[:@version] || 0
       update_attributes(_remove_metadata(atts))
     end 
@@ -288,7 +287,6 @@ module Rorient
     #   # => 1
     #
     def rid
-      raise MissingRID if not defined?(@rid)
       @rid
     end
 

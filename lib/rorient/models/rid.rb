@@ -3,7 +3,7 @@ module Rorient
     WrongRidFormat = Class.new(StandardError) 
     NoRidFound = Class.new(StandardError) 
 
-    attr_accessor :rid
+    attr_reader :rid
     
     def initialize(rid_obj:)
       @rid = rid_obj 

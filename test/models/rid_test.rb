@@ -14,4 +14,12 @@ describe "Rorient::Rid" do
     rorient_rid.must_be_instance_of Rorient::Rid
   end
 
+  it "will check that hash has a rid" do
+    proc { Rorient::Rid.new(rid_obj: {first: 1, second: "no", good: true}) }.must_raise Rorient::Rid::NoRidFound
+  end
+
+  it "has a rid method to read rid" do
+    rorient_rid = Rorient::Rid.new(rid_obj: "12:34")
+    rorient_rid.rid.must_equal "12:34"
+  end
 end
