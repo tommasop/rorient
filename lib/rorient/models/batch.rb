@@ -1,5 +1,13 @@
 module Rorient
   class Batch
+    def self.from_string(statement:, with_separator:)
+      if statement.is_a? String
+        self.new(statements: statement.split(with_separator))
+      else
+        raise Rorient::Error("statement must be a String")
+      end
+    end
+
     def initialize(statements: [])
       @statements = statements
     end
