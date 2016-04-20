@@ -5,7 +5,7 @@ describe "Rorient::Rid" do
   it "initializes with a rid_obj argument" do
     proc { Rorient::Rid.new }.must_raise  ArgumentError
     rorient_rid = Rorient::Rid.new(rid_obj: "#12:34")
-    rorient_rid.instance_variable_get(:@rid).must_equal "#12:34"
+    rorient_rid.instance_variable_get(:@rid).must_equal "12:34"
   end
 
   it "will check rid is either #x:y or x:y" do
@@ -20,6 +20,13 @@ describe "Rorient::Rid" do
 
   it "has a rid method to read rid" do
     rorient_rid = Rorient::Rid.new(rid_obj: "12:34")
+    rorient_rid.rid.must_equal "12:34"
+  end
+
+  it "will always return a rid without #" do
+    rorient_rid = Rorient::Rid.new(rid_obj: "#12:34")
+    rorient_rid.rid.must_equal "12:34"
+    rorient_rid = Rorient::Rid.new(rid_obj: {rid: "#12:34"})
     rorient_rid.rid.must_equal "12:34"
   end
 end

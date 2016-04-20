@@ -23,6 +23,7 @@ module Rorient
 
     def check_rid
       raise WrongRidFormat unless @rid.match(/(#?\d+:{1}\d+)/) 
+      @rid.gsub!("#","")
     end
   end
 end
