@@ -29,6 +29,7 @@ module Rorient
         verb :patch
         body { |object| Oj.dump(object, mode: :compat) }
         handler(200) { |response|  Oj.load(response.body) }
+        handler(404) { |response| false }
         # handler(422) { |response| ErrorMapping.fail_with(FailedCreate, response.body) }
       end
 
