@@ -60,11 +60,13 @@ describe "Rorient::DocumentResource" do
 
   it "updates a document through its rid" do
     result = rorient_client.document.find(rid: "5:0")
+    old_version = result[:@version]
     updated_user_data = {rid: "5:0", "@version": result[:@version], name: "administrator", status: "INACTIVE" }
     result = rorient_client.document.update(updated_user_data)
     result.must_be_instance_of Hash
     result[:name].must_equal "administrator"
     result[:status].must_equal "INACTIVE"
+    result[:@version].must_equal (old_version + 1)
     result[:name] = "admin"
     result[:status] = "ACTIVE"
     rorient_client.document.update(updated_user_data)
