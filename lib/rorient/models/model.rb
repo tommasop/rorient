@@ -94,8 +94,8 @@ module Rorient
 
         define_method "#{association_name}=" do | vertex |
           if vertex.class == vertex_class.constantize
-            self.send(edge_class) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{self.rid} to #{vertex.rid}"))  
-            self.send(edge_class)
+            self.send(association_name) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{self.rid} to #{vertex.rid}"))  
+            self.send(association_name)
           else
             raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
           end
@@ -122,8 +122,8 @@ module Rorient
 
         define_method "#{association_name}=" do | vertex |
           if vertex.class == vertex_class.constantize
-            self.send(edge_class) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{vertex.rid} to #{self.rid}"))  
-            self.send(edge_class)
+            self.send(association_name) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{vertex.rid} to #{self.rid}"))  
+            self.send(association_name)
           else
             raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
           end
