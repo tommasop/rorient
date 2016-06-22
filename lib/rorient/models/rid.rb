@@ -17,7 +17,7 @@ module Rorient
       elsif @rid.keys.include?(:rid)
         @rid = @rid[:rid] 
       else
-        @rid = nil
+        raise NoRidFound 
       end
     end
 

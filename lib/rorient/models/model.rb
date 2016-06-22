@@ -271,7 +271,11 @@ module Rorient
     def initialize(atts={})
       @attributes = {}
       @_memo = {}
-      @rid = Rid.new(rid_obj: atts).rid 
+      @rid =  begin
+                Rid.new(rid_obj: atts).rid 
+              rescue Rid::NoRidFound
+                nil
+              end
       @version = atts[:@version] || 0
       update_attributes(_remove_metadata(atts))
     end 
