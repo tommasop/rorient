@@ -78,7 +78,7 @@ module Rorient
     end
     
     # Methods to traverse graphs through relations
-    # class MyModel < Rorient::Model
+    # class MyModel < Rorient::Model(DBCLIENT)
     #   has_many "my_names", vertex_class:"MyOtherModel", edge_class:"has_relations"
     # end
     # 
@@ -106,7 +106,7 @@ module Rorient
     end
 
     # Methods to traverse graphs through relations
-    # class MyModel < Rorient::Model
+    # class MyModel < Rorient::Model(DBCLIENT)
     #   belongs_to "my_name", vertex_class:"MyOtherModel",edge_class:"has_relations"
     # end
     # 
@@ -164,7 +164,7 @@ module Rorient
 
     # Check if the ID exists within <Model>:all.
     def self.exists?(rid)
-      orientdb.document.exists(rid: rid)
+      orientdb.document.exists(rid: Rorient::Rid.new(rid_obj: rid).rid)
     end
 
     # An Rorient::Set wrapper for Model.key[:all].
@@ -280,7 +280,7 @@ module Rorient
     #
     # Example:
     #
-    #   class User < Rorient::Model; end
+    #   class User < Rorient::Model(DBCLIENT); end
     #
     #   u = User.create
     #   u.rid
@@ -440,7 +440,7 @@ module Rorient
     end
   end
   
-  #   class Comment < Rorient::Model(DB)
+  #   class Comment < Rorient::Model(DBCLIENT)
   #   this sets the instance variable @orientdb to the
   #   OrientDB Database 
   def self.Model(source)
