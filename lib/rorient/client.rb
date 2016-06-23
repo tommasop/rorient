@@ -21,7 +21,7 @@ module Rorient
     def connection
       Faraday.new(connection_options) do |faraday|
         faraday.request :retry, max: 2, interval: 0.05,
-                     interval_randomness: 0.5, backoff_factor: 2
+                     interval_randomness: 0.5, backoff_factor: 2,
                      exceptions: [ Faraday::Error::ConnectionFailed ]
         faraday.request  :url_encoded                           # form-encode POST params
         faraday.request  :basic_auth, @user, @password          # basic authentication
