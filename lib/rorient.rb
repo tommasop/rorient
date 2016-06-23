@@ -51,7 +51,9 @@ module Rorient
   end
 
   def self.connect(server:, user:, password:, db_name:)
-    Rorient::Client.new(server: server, user: user, password: password, scope:{database: db_name})
+    # Solution for multi threaded requests (eg. Puma deployment)
+    Thread.current[:rorient_client] ||= Rorient::Client.new(server: server, user: user, password: password, scope:{database: db_name})
+    # Rorient::Client.new(server: server, user: user, password: password, scope:{database: db_name})
   end
 end
 
