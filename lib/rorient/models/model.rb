@@ -117,7 +117,7 @@ module Rorient
         attr_accessor association_name
 
         define_method association_name do
-          orientdb.query.execute("SELECT EXPAND( IN(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}")[:result]
+          orientdb.query.execute(query_text: URI.encode("SELECT EXPAND( IN(#{edge_class.camelize}) ) FROM #{self.class.to_s} WHERE @rid=#{rid}"))[:result]
         end
 
         define_method "#{association_name}=" do | vertex |
