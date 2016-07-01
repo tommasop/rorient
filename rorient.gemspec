@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "resource_kit", '~> 0.1.4'
   spec.add_dependency "faraday", '~> 0.9.1'
-  spec.add_dependency "faraday_connection_pool"
   spec.add_dependency "activesupport"
 
   spec.add_development_dependency "bundler", "~> 1.11.0"
