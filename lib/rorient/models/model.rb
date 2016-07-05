@@ -221,7 +221,7 @@ module Rorient
       # adding an order by clause
       query << "order by #{params["order"]}" if params["order"]
       query << "/-1"
-      orientdb.query.execute(query_text: URI.encode("SELECT #{query.join(" ")}", /\s|(\*)|(\[)|(\])|(\$)|(\{)|(\})|(\()|(\))/))
+      orientdb.query.execute(query_text: URI.encode("SELECT #{query.join(" ")}", /\s|(\*)|(\[)|(\])|(\$)|(\{)|(\})|(\()|(\))|(\')/))
     end
 
     # method to map google zoom levels to square kilometers
