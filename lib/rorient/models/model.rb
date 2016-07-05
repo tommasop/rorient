@@ -194,7 +194,7 @@ module Rorient
       self.new(rid: orientdb.query.execute(query_text: URI.encode("SELECT @rid from #{self.name} WHERE uuid = '#{uuid}'"))[:result][0][:rid].gsub!("#",'')).load!
     end
     
-    def self.find(params:)
+    def self.find(params:, additional_filters: [])
       query = ["from #{self.name} where"]
       # if I only have the order param strip off where
       query[0].gsub!(" where", "") if params.keys.count == 1 && params["order"]
@@ -214,9 +214,14 @@ module Rorient
       query_attributes.each_with_index do |attr,i|
         query << "#{attr} = '#{params[attr]}' #{"AND" if i < query_attributes.length - 1}" 
       end
+      # adding additional filters
+      additional_filters.each do |additional_filter|
+        query << "AND #{additional_filter}"
+      end if !additional_filters.empty?
       # adding an order by clause
       query << "order by #{params["order"]}" if params["order"]
       query << "/-1"
+      puts query
       orientdb.query.execute(query_text: URI.encode("SELECT #{query.join(" ")}", /\s|(\*)|(\[)|(\])|(\$)|(\{)|(\})/))
     end
 
