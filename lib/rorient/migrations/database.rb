@@ -80,7 +80,7 @@ module Rorient
             "CREATE PROPERTY #{HISTORY_TABLE.to_s}.name STRING",
             "CREATE PROPERTY #{HISTORY_TABLE.to_s}.type STRING",
             "CREATE INDEX #{HISTORY_TABLE.to_s}.time_type ON #{HISTORY_TABLE.to_s} (time, type) NOTUNIQUE_HASH_INDEX"
-          ]).generate_hash
+          ])).generate_hash
       end
     end
   end
