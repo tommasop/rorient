@@ -90,11 +90,11 @@ module Rorient
       def new?
         history = @database.history.to_s
         # If migrations table is empty
-        if @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} LIMIT 1"))["result"].empty?
+        if @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} LIMIT 1"))[:result].empty?
           true
         else
-          last = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = '#{@type}' ORDER BY time DESC LIMIT 1"))["result"].first
-          is_new = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = '#{@type}'"))["result"].count == 0
+          last = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = '#{@type}' ORDER BY time DESC LIMIT 1"))[:result].first
+          is_new = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = '#{@type}'"))[:result].count == 0
           puts "[!] #{self} datetime BEFORE last one executed !" if is_new && last && last["time"] > @datetime
           
           is_new
@@ -113,7 +113,7 @@ module Rorient
           @database.driver.document.create("@class": history, time: @datetime, name: @name, type: @type, executed: Time.now.to_s)
         when "rollback"
           puts "[+] Rolling back history table"
-          migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY time DESC LIMIT 1"))["result"].first
+          migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY time DESC LIMIT 1"))[:result].first
           @database.driver.document.delete(rid: Rorient::Rid.get(migration_record["@rid"])) if migration_record 
         end
       end
