@@ -91,12 +91,15 @@ module Rorient
 
       def new?
         history = @database.history.to_s
+        puts history
         # If migrations table is empty
         if @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} LIMIT 1"))[:result].empty?
           true
         else
           last = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = '#{@type}' ORDER BY time DESC LIMIT 1"))[:result].first
+          puts last
           is_new = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = '#{@type}'"))[:result].count == 0
+          puts is_new
           puts "[!] #{self} datetime BEFORE last one executed !" if is_new && last && last["time"] > @datetime
           
           is_new
