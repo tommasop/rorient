@@ -22,6 +22,7 @@ module Rorient
         return false unless new?
         driver = @database.driver
         begin
+           puts statements(@type)
            driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash)
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"

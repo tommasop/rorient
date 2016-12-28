@@ -23,6 +23,7 @@ module Rorient
         migrations = Rorient::Migrations::Migration.find(@name)
         if !migrations.empty?
           puts "[i] Executing migrations for `#{@name}` database"
+          puts migrations
           migrations.each { |migration| migration.execute(self) }
         else
           puts "[i] No migrations for `#{@name}` database"
