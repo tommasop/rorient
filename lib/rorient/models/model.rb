@@ -277,7 +277,7 @@ module Rorient
       @_memo = {}
       @rid =  begin
                 Rid.new(rid_obj: atts).rid 
-              rescue Rorient::Rid::NoRidFound
+              rescue Rid::NoRidFound
                 nil
               end
       @version = atts[:@version] || 0
