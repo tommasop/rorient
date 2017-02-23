@@ -32,14 +32,18 @@ module Rorient
 
       def rollback(steps:0)
         steps -= 1 if steps != 0
-        # for rollbacks the list must be rolled back to avoid rollbacking
-        # the wrong migration
-        rollbacks = Rorient::Migrations::Migration.find(@name).reverse
+        # the rollback action must look into the db
+        # for rollbacks the list must be taken in DESC order 
+        rollback_files = Rorient::Migrations::Migration.find(@name).reverse
+        rollbacks = query.execute(query_text: URI.encode("SELECT FROM #{hystory} ORDER BY time DESC"))[:result] 
         if !rollbacks.empty?
           puts "[i] Executing rollback for `#{@name}` database"
           # Rollback is executed only on the steps
           # performed migration
-          rollbacks[0..steps].each { |rollback| rollback.unexecute(self) }
+          rollbacks[0..steps].each do |rollback| 
+            puts rollback_files
+            # rollback.unexecute(self) 
+          end
         else
           puts "[i] No rollback possible for `#{@name}` database"
         end
