@@ -35,6 +35,8 @@ module Rorient
         # the rollback action must look into the db
         # for rollbacks the list must be taken in DESC order 
         rollback_files = Rorient::Migrations::Migration.find(@name).reverse
+        puts driver
+        puts history
         rollbacks = driver.query.execute(query_text: URI.encode("SELECT FROM #{history} ORDER BY time DESC"))[:result] 
         if !rollbacks.empty?
           puts "[i] Executing rollback for `#{@name}` database"
