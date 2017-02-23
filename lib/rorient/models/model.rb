@@ -1,4 +1,56 @@
 module Rorient
+	# Instead of monkey patching Kernel or trying to be clever, it's
+  # best to confine all the helper methods in a Utils module.
+  module Utils
+    # Creates a hash from an array
+    def self.dict(arr)
+      Hash[*arr]
+    end
+  end
+
+	module Collection
+		include Enumerable
+
+		def each
+			if block_given?
+				ids.each_slice(1000) do |slice|
+					fetch(slice).each { |e| yield(e) }
+				end
+			else
+				to_enum
+			end
+		end
+
+		def to_a
+			fetch(ids)
+		end
+
+		def empty?
+			size == 0
+		end
+
+		# Wraps the whole pipelining functionality.
+		def fetch(ids)
+			data = nil
+
+			model.synchronize do
+				ids.each do |id|
+          # TODO: implement orientdb
+				end
+
+				data = "" # TODO: implement orientdb
+			end
+
+			return [] if data.nil?
+
+			[].tap do |result|
+				data.each_with_index do |atts, idx|
+					result << model.new(Utils.dict(atts).update(:id => ids[idx]))
+				end
+			end
+		end
+	end
+
   class Model
     # This is the instance variable containing the client
     # to OrientDB HTTP API
@@ -97,7 +149,7 @@ module Rorient
             self.send(association_name) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{self.rid} to #{vertex.rid}"))  
             self.send(association_name)
           else
-            raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
+            raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex.class} instead."
           end
         end
       else
@@ -125,7 +177,7 @@ module Rorient
             self.send(association_name) << orientdb.command.execute(command_text: URI.encode("CREATE EDGE #{edge_class.camelize} from #{vertex.rid} to #{self.rid}"))  
             self.send(association_name)
           else
-            raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex_class} instead."
+            raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex.class} instead."
           end
         end
       else
