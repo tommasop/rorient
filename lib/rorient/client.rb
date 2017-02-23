@@ -15,7 +15,7 @@ module Rorient
       Faraday.new(connection_options) do |faraday|
         faraday.request  :url_encoded                           # form-encode POST params
         faraday.request  :basic_auth, @user, @password          # basic authentication
-        # faraday.response :logger                                # log requests to STDOUT
+        faraday.response :logger                                # log requests to STDOUT
         faraday.adapter  Faraday.default_adapter                # make requests with Net::HTTP
       end
     end
