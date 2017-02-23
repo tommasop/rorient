@@ -12,6 +12,7 @@ module Rorient
     end
 
     def connection
+      puts connection_options
       Faraday.new(connection_options) do |faraday|
         faraday.request  :url_encoded                           # form-encode POST params
         faraday.request  :basic_auth, @user, @password          # basic authentication
