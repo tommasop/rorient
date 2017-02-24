@@ -40,7 +40,7 @@ module Rorient
           # Rollback is executed only on the steps
           # performed migration
           rollbacks[0..steps].each do |rollback| 
-            rollback_files.each { | rollback_file | rollback_file.unexecute(self) if rollback_file.name == rollback.name  }
+            rollback_files.each { | rollback_file | rollback_file.unexecute(self) if rollback_file.name == rollback[:name]  }
           end
         else
           puts "[i] No rollback possible for `#{@name}` database"
