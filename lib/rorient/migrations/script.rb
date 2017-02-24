@@ -91,7 +91,7 @@ module Rorient
       private
 
       def new?
-        history = @database.history.to_s
+        history = @database.history
         # If migrations table is empty
         if @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} LIMIT 1"))[:result].empty?
           true

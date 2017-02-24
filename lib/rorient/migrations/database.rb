@@ -3,7 +3,7 @@ module Rorient
     # Class that represents database gem will connect to
     #
     class Database
-      HISTORY_TABLE = "rorient_migrations_schema".freeze
+      HISTORY_TABLE = "rorient_schema_migrations".freeze
       attr_reader :name, :driver
 
       def initialize(name, options)
