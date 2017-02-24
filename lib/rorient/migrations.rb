@@ -22,7 +22,9 @@ module Rorient
     end
 
     def rollback(steps:0)
+      puts databases
       databases.each do | db |
+        puts db
         db.rollback(steps: steps)
       end
       # databases(&:rollback)
