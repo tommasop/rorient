@@ -53,6 +53,13 @@ DROP Planimetry UNSAFE;
 
 Then use the familiar `rorient:db:migrate` and `rorient:db:rollback`rake tasks.
 
+For the rollback you can also pass a `STEPS` env variable to the task to specify
+how many migrations must be rolled back.
+
+```
+   rake rorient:db:rollback STEPS=3
+```
+
 ## Directed Graph relations
 
 Graph relations are simply direct links between objects this means you could have multiple
