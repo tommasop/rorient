@@ -3,11 +3,11 @@ module Rorient
     # Class that represents database gem will connect to
     #
     class Database
-      HISTORY_TABLE = :rorient_migrations_schema
+      HISTORY_TABLE = "rorient_migrations_schema".freeze
       attr_reader :name, :driver
 
       def initialize(name, options)
-        @name    = name
+        @name = name
         begin
           @driver = self.class.connect(options)
         rescue
@@ -23,7 +23,6 @@ module Rorient
         migrations = Rorient::Migrations::Migration.find(@name)
         if !migrations.empty?
           puts "[i] Executing migrations for `#{@name}` database"
-          puts migrations
           migrations.each { |migration| migration.execute(self) }
         else
           puts "[i] No migrations for `#{@name}` database"
@@ -35,15 +34,12 @@ module Rorient
         # the rollback action must look into the db
         # for rollbacks the list must be taken in DESC order 
         rollback_files = Rorient::Migrations::Migration.find(@name).reverse
-        puts driver.connection
-        puts history
         rollbacks = driver.query.execute(query_text: URI.encode("SELECT FROM #{history} ORDER BY time DESC"))[:result] 
         if !rollbacks.empty?
           puts "[i] Executing rollback for `#{@name}` database"
           # Rollback is executed only on the steps
           # performed migration
           rollbacks[0..steps].each do |rollback| 
-            puts rollback_files
             # rollback.unexecute(self) 
           end
         else
@@ -83,12 +79,12 @@ module Rorient
         # Schema changes in OrientDB ar not transactionable
         @driver.batch.execute(Rorient::Batch.new(statements: 
           [ 
-            "CREATE CLASS #{HISTORY_TABLE.to_s}",
-            "CREATE PROPERTY #{HISTORY_TABLE.to_s}.time DOUBLE",
-            "CREATE PROPERTY #{HISTORY_TABLE.to_s}.executed DATETIME",
-            "CREATE PROPERTY #{HISTORY_TABLE.to_s}.name STRING",
-            "CREATE PROPERTY #{HISTORY_TABLE.to_s}.type STRING",
-            "CREATE INDEX #{HISTORY_TABLE.to_s}.time_type ON #{HISTORY_TABLE.to_s} (time, type) NOTUNIQUE_HASH_INDEX"
+            "CREATE CLASS #{HISTORY_TABLE}",
+            "CREATE PROPERTY #{HISTORY_TABLE}.time DOUBLE",
+            "CREATE PROPERTY #{HISTORY_TABLE}.executed DATETIME",
+            "CREATE PROPERTY #{HISTORY_TABLE}.name STRING",
+            "CREATE PROPERTY #{HISTORY_TABLE}.type STRING",
+            "CREATE INDEX #{HISTORY_TABLE}.time_type ON #{HISTORY_TABLE} (time, type) NOTUNIQUE_HASH_INDEX"
           ]).generate_hash)
       end
     end
