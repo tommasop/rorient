@@ -29,7 +29,7 @@ module Rorient
         end
       end
 
-      def rollback(steps:0)
+      def rollback(steps=0)
         steps -= 1 if steps != 0
         # the rollback action must look into the db
         # for rollbacks the list must be taken in DESC order 

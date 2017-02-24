@@ -1,6 +1,12 @@
 # Rorient::Migrations
 Oj.default_options = {:symbol_keys => true}
 
+class Symbol
+  def with(*args, &block)
+    ->(caller, *rest) { caller.send(self, *rest, *args, &block) }
+  end
+end
+
 module Rorient
   module Migrations
 
@@ -21,13 +27,8 @@ module Rorient
       databases(&:seed)
     end
 
-    def rollback(steps:0)
-      puts databases
-      databases.each do | db |
-        puts db
-        db[0].rollback(steps: steps)
-      end
-      # databases(&:rollback)
+    def rollback(steps)
+      databases(&:rollback.with(steps))
     end
 
     def scripts
