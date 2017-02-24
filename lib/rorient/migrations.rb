@@ -21,8 +21,11 @@ module Rorient
       databases(&:seed)
     end
 
-    def rollback
-      databases(&:rollback)
+    def rollback(steps:0)
+      databases.each do | db |
+        db.rollback(steps: steps)
+      end
+      # databases(&:rollback)
     end
 
     def scripts
