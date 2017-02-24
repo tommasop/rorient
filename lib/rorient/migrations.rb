@@ -1,5 +1,6 @@
 # Rorient::Migrations
-#
+Oj.default_options = {:symbol_keys => true}
+
 module Rorient
   module Migrations
 
