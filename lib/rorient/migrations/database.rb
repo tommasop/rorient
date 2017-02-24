@@ -39,7 +39,9 @@ module Rorient
           puts "[i] Executing rollback for `#{@name}` database"
           # Rollback is executed only on the steps
           # performed migration
-          rollbacks[0..steps].each do |rollback| 
+          rollbacks[0..steps].each_with_index do |rollback, i| 
+            puts rollback_files.map(&:name)
+            # rollback_files[i].unexecute(self)
             # rollback.unexecute(self) 
           end
         else
