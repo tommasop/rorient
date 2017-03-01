@@ -11,12 +11,19 @@ Oj.default_options = {:symbol_keys => true}
 module Rorient
   autoload :Client, "rorient/client"
   
-  # Base Model
-  autoload :Rid, "rorient/models/rid"
-  autoload :Batch, "rorient/models/batch"
-  autoload :Model, "rorient/models/model"
+  # Utils to deal with OrientDB rids and batches
+  autoload :Rid, "rorient/utils/rid"
+  autoload :Batch, "rorient/utils/batch"
 
-  # Resources
+  # Data modeling classes
+  autoload :Model, "rorient/models/model"
+  autoload :Vertex, "rorient/models/vertex"
+  autoload :VertexEdge, "rorient/models/vertex_edge"
+  autoload :VertexTraverser, "rorient/models/vertex_traverser"
+  autoload :Edge, "rorient/models/edge"
+  autoload :EdgeTraverser, "rorient/models/edge_traverser"
+
+  # OrientDB HTTP API Endpoints
   #autoload :Server, "rorient/resources/server"
   autoload :DocumentResource, "rorient/resources/document_resource"
   autoload :OClassResource, "rorient/resources/oclass_resource"
@@ -25,7 +32,7 @@ module Rorient
   autoload :CommandResource, "rorient/resources/command_resource"
   autoload :BatchResource, "rorient/resources/batch_resource"
 
-  # Utils
+  # HTTP API Class to deal with OrientDB errors
   autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"
 
   # Migrations
@@ -57,4 +64,5 @@ end
 
 # need to call this or it will not find it in the
 # self.Model method!
-Rorient::Model
+Rorient::Vertex
+Rorient::Edge

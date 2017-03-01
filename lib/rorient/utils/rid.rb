@@ -7,11 +7,12 @@ module Rorient
     
     def initialize(rid_obj:)
       @rid = rid_obj 
-      extract_rid if rid_obj.is_a? Hash
+      extract_rid_from_hash if rid_obj.is_a? Hash
+      @rid = rid_obj.rid if (rid_obj.class.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
       check_rid
     end
 
-    def extract_rid
+    def extract_rid_from_hash
       if @rid.keys.include?(:@rid)
         @rid = @rid[:@rid] 
       elsif @rid.keys.include?(:rid)
