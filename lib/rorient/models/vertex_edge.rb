@@ -16,20 +16,20 @@ module Rorient
     end
 
     def rels(*types)
-      Rorient::EdgeTraverser.new(self, types, :both)
+      Rorient::EdgeTraverser.new(self, :both, types)
     end
 
     def rel(dir, type)
-      rel = Rorient::EdgeTraverser.new(self, type, dir)
+      rel = Rorient::EdgeTraverser.new(self, dir, type)
       rel = rel.first unless rel.empty?
       rel
     end
 
     def rel?(dir=nil, type=nil)
       if DIRECTIONS.include?(dir.to_s)
-        !self.orientdb.get_vertex_edges(self, dir, type).empty? 
+        !self.class.orientdb.get_vertex_edges(self.rid, dir, type).empty? 
       else
-        !self.orientdb.get_vertex_edges(self, type, dir).empty? 
+        !self.class.orientdb.get_vertex_edges(self.rid, dir, type).empty? 
       end
     end
 

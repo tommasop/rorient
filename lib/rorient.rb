@@ -32,6 +32,9 @@ module Rorient
   autoload :CommandResource, "rorient/resources/command_resource"
   autoload :BatchResource, "rorient/resources/batch_resource"
 
+  # client direct queries
+  autoload :GraphQueries, "rorient/queries/graph_queries"
+
   # HTTP API Class to deal with OrientDB errors
   autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"
 

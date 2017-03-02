@@ -2,6 +2,8 @@ require "faraday"
 
 module Rorient
   class Client
+    include Rorient::GraphQueries
+
     attr_reader :db
 
     def initialize(server:, user:, password:, scope: nil)

@@ -1,11 +1,10 @@
 module Rorient
   class Vertex
+    include Rorient::VertexEdge
+    
     # This is the instance variable containing the client
     # to OrientDB HTTP API
     @orientdb = nil
-    
-    include Rorient::VertexEdge
-    
     # The client to connect to the OrientDB HTTP API
     # Use this if you want to do quick ad hoc orientdb commands against the
     # defined connection.
@@ -21,7 +20,6 @@ module Rorient
     def self.orientdb=(orientdb)
       @orientdb = orientdb
     end
-    
     # Define the orientdb database passed in to the model
     # directly to the inherited class
     def self.inherited(subclass)
@@ -136,7 +134,7 @@ module Rorient
     #   # => 1
     #
     def rid
-      @rid
+			Rid.new(rid_obj: @rid).rid
     end
 
     # Check for equality by doing the following assertions:

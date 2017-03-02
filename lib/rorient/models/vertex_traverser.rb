@@ -4,7 +4,7 @@ module Rorient
 
     attr_accessor :order, :uniqueness, :depth, :prune, :filter, :edges
 
-    def initialize(from, types = nil, dir = "all" )
+    def initialize(from, types = nil, dir = "both" )
       @from  = from
       @order = "depth first"
       @uniqueness = "none"

@@ -11,8 +11,9 @@ module ErrorHandlingResourceable
           error.reset_at = response.headers['RateLimit-Reset']
           error
         else
-          error = Rorient::Error.new(response.body)
-          Oj.load(error.message)
+          raise Rorient::Error.new(response.body)
+          # error = Rorient::Error.new(response.body)
+          # Oj.load(error.message)
         end
       end
     end
