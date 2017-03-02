@@ -1,5 +1,7 @@
 module Rorient
   class Edge
+#    include EdgeVertex
+    include EdgeGraph
     # This is the instance variable containing the client
     # to OrientDB HTTP API
     @orientdb = nil

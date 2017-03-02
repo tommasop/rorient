@@ -18,10 +18,10 @@ module Rorient
   # Data modeling classes
   autoload :Model, "rorient/models/model"
   autoload :Vertex, "rorient/models/vertex"
-  autoload :VertexEdge, "rorient/models/vertex_edge"
-  autoload :VertexTraverser, "rorient/models/vertex_traverser"
+  autoload :VertexGraph, "rorient/models/vertex_graph"
+  autoload :NodesRetriever, "rorient/models/nodes_retriever"
   autoload :Edge, "rorient/models/edge"
-  autoload :EdgeTraverser, "rorient/models/edge_traverser"
+  autoload :EdgeGraph, "rorient/models/edge_graph"
 
   # OrientDB HTTP API Endpoints
   #autoload :Server, "rorient/resources/server"

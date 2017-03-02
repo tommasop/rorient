@@ -1,6 +1,7 @@
 module Rorient
   class Vertex
-    include Rorient::VertexEdge
+#    include Rorient::VertexEdge
+    include Rorient::VertexGraph
     
     # This is the instance variable containing the client
     # to OrientDB HTTP API
