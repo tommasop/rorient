@@ -2,6 +2,7 @@ require "faraday"
 
 module Rorient
   class Client
+    include Rorient::MetaQueries
     include Rorient::GraphQueries
 
     attr_reader :db
@@ -31,18 +32,6 @@ module Rorient
         command: CommandResource,
         batch: BatchResource
       }
-    end
-
-    def table_exists?(table_name)
-      !oclass.find(class_name: table_name).nil?
-    end
-
-    def create_table(table_name)
-      oclass.create(class_name: table_name)
-    end
-    
-    def delete_table(table_name)
-      oclass.delete(class_name: table_name)
     end
 
     def method_missing(name, *args, &block)

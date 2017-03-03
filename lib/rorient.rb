@@ -16,12 +16,10 @@ module Rorient
   autoload :Batch, "rorient/utils/batch"
 
   # Data modeling classes
-  autoload :Model, "rorient/models/model"
+  autoload :Base, "rorient/models/base"
   autoload :Vertex, "rorient/models/vertex"
-  autoload :VertexGraph, "rorient/models/vertex_graph"
   autoload :NodesRetriever, "rorient/models/nodes_retriever"
   autoload :Edge, "rorient/models/edge"
-  autoload :EdgeGraph, "rorient/models/edge_graph"
 
   # OrientDB HTTP API Endpoints
   #autoload :Server, "rorient/resources/server"
@@ -33,6 +31,7 @@ module Rorient
   autoload :BatchResource, "rorient/resources/batch_resource"
 
   # client direct queries
+  autoload :MetaQueries, "rorient/queries/meta_queries"
   autoload :GraphQueries, "rorient/queries/graph_queries"
 
   # HTTP API Class to deal with OrientDB errors

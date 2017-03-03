@@ -7,10 +7,10 @@ module Rorient
     def initialize(from, v_or_e = "V", direction = :both, o_classes = nil)
       @from = from
       @rid = from.rid
-      @odb = from.class.orientdb
+      @odb = from.class.odb
       @v_or_e = v_or_e
       @direction = direction
-      @o_classes = o_classes
+      @o_classes = o_classes ? [o_classes].flatten : nil
       @depth = nil
       @strategy = nil
     end
@@ -34,7 +34,7 @@ module Rorient
 
     def iterator
       if v_or_e == "T"
-        odb.get_traverse(rid, direction, @depth, @strategy)
+        odb.get_traverse(rid, direction, o_classes, @depth, @strategy)
       else
         odb.get_nodes(rid, "#{direction}#{v_or_e}", o_classes)
       end
