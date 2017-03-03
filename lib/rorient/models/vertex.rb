@@ -1,27 +1,18 @@
 module Rorient
   class Vertex < Base
 
-    #def self.named_vertexes(association_class, association_type = :one2many)
-    #  association_name, direction = Rorient::AssociationData.from(association_class, association_type)
-    #  attr_accessor association_name
+    def self.named_vertexes(name, edge_class, direction = :both)
+      attr_accessor name
 
-    #  define_method association_name do
-    #    self.send(direction, association_class)
-    #  end
+      define_method name do
+        self.send(direction, edge_class)
+      end
 
-    #  define_method "#{association_name}=" do | vertex |
-    #    if vertex.class == association_class.constantize
-    #      self.send(association_name) << edge_class.constantize.create(self.rid, vertex.rid)
-    #      self.send(association_name)
-    #    else
-    #      raise DifferentVertexClassError, "Expected a vertex of type #{vertex_class} received #{vertex.class} instead."
-    #    end
-    #  end
-    #end
-    #
-    #def self.named_edges(name, direction = :both, rel_type = "ONE2MANY")
-
-    #end
+      define_method "#{name}=" do | vertex |
+        edge_class.constantize.create(self.rid, vertex.rid)
+        self.send(direction, edge_class)
+      end
+    end
     
     def outE(types = nil)
       Rorient::NodesRetriever.new(self, "E", :out, types)

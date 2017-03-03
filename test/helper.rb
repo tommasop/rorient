@@ -17,7 +17,9 @@ end
 ODB = Rorient::Client.new(server: Testing::SERVER, user: Testing::USERNAME, password: Testing::PASSWORD, scope: { database: Testing::DATABASE })
 
 # class IntegrationMap < Rorient::Vertex(ODB); end
-class Drawing < Rorient::Vertex(ODB); end
+class Drawing < Rorient::Vertex(ODB)
+  named_vertexes :layers, "DrawingLayers", :in
+end
 class DrawingLayers < Rorient::Edge(ODB); end
 class Layer < Rorient::Vertex(ODB); end
 class LayerEntities < Rorient::Edge(ODB); end
