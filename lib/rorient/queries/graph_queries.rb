@@ -6,21 +6,6 @@ module Rorient
       query.execute(query_text: URI.encode("SELECT EXPAND(#{direction}(#{o_classes})) FROM #{rid}/-1"))[:result]
     end
 
-#    def get_vertex_edges(rid, direction = nil, types = nil)
-#      types = types ? types.map{|type| "'" + type + "'"}.join(",") : ""
-#      query.execute(query_text: URI.encode("SELECT EXPAND(#{direction || "both"}E(#{types})) FROM #{rid}/-1"))[:result]
-#    end
-#    
-#    def get_vertex_vertexes(rid, direction = nil, types = nil)
-#      types = types ? types.map{|type| "'" + type + "'"}.join(",") : ""
-#      query.execute(query_text: URI.encode("SELECT EXPAND(#{direction || "both"}(#{types})) FROM #{rid}/-1"))[:result]
-#    end
-#
-#    def get_edge_vertexes(rid, direction = nil, types = nil)
-#      types = types ? types.map{|type| "'" + type + "'"}.join(",") : ""
-#      query.execute(query_text: URI.encode("SELECT EXPAND(#{direction || "both"}V(#{types})) FROM #{rid}/-1"))[:result]
-#    end
-
     def get_traverse(rid, direction = nil, depth = nil, strategy = nil)
       depth = depth ? "WHILE $depth <= #{depth}" : ""
       query.execute(query_text: URI.encode("TRAVERSE #{direction || "both"}() FROM #{rid} #{depth} STRATEGY #{strategy || "DEPTH_FIRST"}/-1"))[:result]
