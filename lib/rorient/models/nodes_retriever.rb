@@ -6,11 +6,8 @@ module Rorient
 
     def initialize(from, v_or_e = "V", direction = :both, o_classes = nil)
       @from = from
-      if !from.is_a? Class
-        @rid = from.rid
-        @odb = from.class.odb
-      end
-      @odb = from.odb
+      @rid = from.rid if !from.is_a? Class
+      @odb = from.is_a?(Class) ? from.odb : from.class.odb
       @v_or_e = v_or_e
       @direction = direction
       @o_classes = o_classes ? [o_classes].flatten : nil
