@@ -24,8 +24,8 @@ module Rorient
         driver = @database.driver
         puts driver
         begin
-          puts Rorient::Batch.new(statements: statements(@type)).generate_hash
-          driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash)
+          # puts Rorient::Batch.new(statements: statements(@type)).generate_hash
+          driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash(with_transaction: true))
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
           puts "    Info: #{self}"
@@ -40,7 +40,7 @@ module Rorient
         @type = "rollback"
         driver = @database.driver
         begin
-          driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash)
+          driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash(with_transaction: true))
         rescue
           puts "[-] Error while executing rollback #{@name} !"
           puts "    Info: #{self}"
