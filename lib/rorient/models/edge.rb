@@ -7,6 +7,10 @@ module Rorient
       new(atts).save
     end
 
+    def self.all
+      Rorient::NodesRetriever.new(self, "E").get_all
+    end
+
     def outV(types = nil)
       Rorient::NodesRetriever.new(self, "", :out, types)
     end

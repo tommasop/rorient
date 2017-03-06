@@ -15,5 +15,9 @@ module Rorient
     def get_attributes(o_class)
       oclass.find(class_name: o_class)[:properties]
     end
+    
+    def get_all(root_class, class_name)
+      query.execute(query_text: URI.encode("SELECT FROM #{root_class} WHERE @class = '#{class_name}'/-1"))[:result]
+    end
   end
 end

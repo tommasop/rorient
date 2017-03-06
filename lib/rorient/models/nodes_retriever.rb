@@ -6,13 +6,17 @@ module Rorient
 
     def initialize(from, v_or_e = "V", direction = :both, o_classes = nil)
       @from = from
-      @rid = from.rid
-      @odb = from.class.odb
+      if !from.is_a? Class
+        @rid = from.rid
+        @odb = from.class.odb
+      end
+      @odb = from.odb
       @v_or_e = v_or_e
       @direction = direction
       @o_classes = o_classes ? [o_classes].flatten : nil
       @depth = nil
       @strategy = nil
+      @get_all = nil
     end
 
     def depth(level = nil)
@@ -25,6 +29,11 @@ module Rorient
       self
     end
 
+    def get_all
+      @get_all = true
+      self
+    end
+
     def each
       iterator.map do |i| 
         node = i[:@class].constantize.new(i)
@@ -33,6 +42,7 @@ module Rorient
     end
 
     def iterator
+      return odb.get_all(v_or_e, from.name) if @get_all
       if v_or_e == "T"
         odb.get_traverse(rid, direction, o_classes, @depth, @strategy)
       else
