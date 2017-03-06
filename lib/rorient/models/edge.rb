@@ -15,7 +15,7 @@ module Rorient
       Rorient::NodesRetriever.new(self, "", :in, types)
     end
 
-    def both(types = nil)
+    def bothV(types = nil)
       Rorient::NodesRetriever.new(self, "", :both, types)
     end
   end
