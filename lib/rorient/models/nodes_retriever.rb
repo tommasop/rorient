@@ -5,8 +5,8 @@ module Rorient
     attr_reader :from, :rid, :odb, :v_or_e, :direction, :o_classes
 
     def initialize(from, v_or_e = "V", direction = :both, o_classes = nil)
-      @from = from
-      @rid = from.rid if !from.is_a? Class
+      if !from.is_a? Class
+      @from = from.is_a?(Class) ? from.name : from.rid
       @odb = from.is_a?(Class) ? from.odb : from.class.odb
       @v_or_e = v_or_e
       @direction = direction
@@ -39,14 +39,12 @@ module Rorient
     end
 
     def iterator
-      return odb.get_all(v_or_e, from.name) if @get_all
+      return odb.get_all(v_or_e, from) if @get_all
       if v_or_e == "T"
-        odb.get_traverse(rid, direction, o_classes, @depth, @strategy)
+        odb.get_traverse(from, direction, o_classes, @depth, @strategy)
       else
-        odb.get_nodes(rid, "#{direction}#{v_or_e}", o_classes)
+        odb.get_nodes(from, "#{direction}#{v_or_e}", o_classes)
       end
     end
   end
 end
-
-

@@ -18,6 +18,9 @@ module Rorient
       Rorient::NodesRetriever.new(self, "V").get_all
     end
 
+    def self.traverse
+    end
+
     def outE(types = nil)
       Rorient::NodesRetriever.new(self, "E", :out, types)
     end

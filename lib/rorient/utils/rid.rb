@@ -3,13 +3,14 @@ module Rorient
     WrongRidFormat = Class.new(StandardError) 
     NoRidFound = Class.new(StandardError) 
 
-    attr_reader :rid
-    
     def initialize(rid_obj:)
       @rid = rid_obj 
       extract_rid_from_hash if rid_obj.is_a? Hash
       @rid = rid_obj.rid if (rid_obj.class.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
-      check_rid
+    end
+
+    def rid
+      rid! && @rid.gsub!("#","")
     end
 
     def extract_rid_from_hash
@@ -22,9 +23,12 @@ module Rorient
       end
     end
 
-    def check_rid
-      raise WrongRidFormat unless @rid.match(/(#?\d+:{1}\d+)/) 
-      @rid.gsub!("#","")
+    def rid?
+      !!(@rid.match(/(#?\d+:{1}\d+)/)) 
+    end
+    
+    def rid!
+      rid? || raise(WrongRidFormat)  
     end
   end
 end

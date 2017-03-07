@@ -14,6 +14,7 @@ module Rorient
   # Utils to deal with OrientDB rids and batches
   autoload :Rid, "rorient/utils/rid"
   autoload :Batch, "rorient/utils/batch"
+  autoload :Format, "rorient/utils/format"
 
   # Data modeling classes
   autoload :Base, "rorient/models/base"
@@ -33,6 +34,7 @@ module Rorient
   # client direct queries
   autoload :MetaQueries, "rorient/queries/meta_queries"
   autoload :GraphQueries, "rorient/queries/graph_queries"
+  autoload :QueryBuilder, "rorient/queries/query_builder"
 
   # HTTP API Class to deal with OrientDB errors
   autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"
