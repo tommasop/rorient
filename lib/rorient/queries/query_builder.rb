@@ -20,14 +20,5 @@ module Rorient
     def traverse(args)
       criteria[:traverse].merge!(parse_traverse(args))
     end
-
-    def where
-    end
-
-    def limit
-    end
-
-    def order
-    end
   end
 end

@@ -2,10 +2,9 @@ module Rorient
   class NodesRetriever
     include Enumerable
 
-    attr_reader :from, :rid, :odb, :v_or_e, :direction, :o_classes
+    attr_reader :from, :odb, :v_or_e, :direction, :o_classes
 
     def initialize(from, v_or_e = "V", direction = :both, o_classes = nil)
-      if !from.is_a? Class
       @from = from.is_a?(Class) ? from.name : from.rid
       @odb = from.is_a?(Class) ? from.odb : from.class.odb
       @v_or_e = v_or_e

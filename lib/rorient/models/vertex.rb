@@ -5,7 +5,7 @@ module Rorient
       attr_accessor name
 
       define_method name do
-        self.send(direction, edge_class).send(:to_a)
+        self.send(direction, edge_class).to_a
       end
 
       define_method "#{name}=" do | vertex |
@@ -16,9 +16,6 @@ module Rorient
 
     def self.all
       Rorient::NodesRetriever.new(self, "V").get_all
-    end
-
-    def self.traverse
     end
 
     def outE(types = nil)

@@ -17,7 +17,7 @@ module Rorient
     def parse_traverse(args)
       return WrongArgsFormat unless args.is_a?(Hash)
       args.delete_if{|k,_| ![:fields, :from, :while, :strategy].include?(k) }
-      args.map{|arg_k, arg_v| args[arg_k] = send("parse_#{arg_k}", arg_v) if respond_to?("parse_#{arg_k}") }
+      args.map{ |arg_k, arg_v| args[arg_k] = send("parse_#{arg_k}", arg_v) if respond_to?("parse_#{arg_k}") }
     end
 
     def parse_fields(args)
