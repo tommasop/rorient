@@ -4,10 +4,10 @@ module Rorient
     include Rorient::Format
     
     def criteria
-      @criteria ||= {fields: [], from: [], conditions: {}, traverse: {}}
+      @criteria ||= {}
     end
 
-    def fields(args)
+    def fields(*args)
       criteria[:fields] = criteria[:fields] + parse_fields(args)
       self
     end

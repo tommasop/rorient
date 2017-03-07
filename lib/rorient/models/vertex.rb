@@ -5,7 +5,7 @@ module Rorient
       attr_accessor name
 
       define_method name do
-        self.send(direction, edge_class)
+        self.send(direction, edge_class).to_a
       end
 
       define_method "#{name}=" do | vertex |
