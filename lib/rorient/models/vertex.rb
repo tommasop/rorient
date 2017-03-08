@@ -31,7 +31,7 @@ module Rorient
         @version += 1
       # we need to create
       else
-        @rid = odb.command.execute(command_text: URI.encode("CREATE VERTEX #{node.name} CONTENT #{Oj.dump(attributes, mode: :compat)}"))[:@rid]
+        @rid = odb.command.execute(command_text: URI.encode("CREATE VERTEX #{node.name} CONTENT #{Oj.dump(attributes, mode: :compat)}"))[:result].first[:@rid]
         @version = 0
       end
 

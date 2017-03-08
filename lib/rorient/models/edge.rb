@@ -20,11 +20,11 @@ module Rorient
       # We need to update
       if defined?(@rid) && !@rid.nil?
         features["@version"] = @version
-        odb.command.execute(command_text: URI.encode("UPDATE EDGE #{rid} MERGE #{Oj.dump(features.merge(attributes), mode: :compat)}"))
+        odb.command.execute(command_text: URI.encode("UPDATE EDGE #{rid} MERGE #{Oj.dump(features.merge(attributes), mode: :compat)}"))[:result].first
         @version += 1
       # we need to create
       else
-        @rid = odb.command.execute(command_text: URI.encode("CREATE EDGE #{node.name} FROM #{attributes.delete(:out)} TO #{attributes.delete(:in)} CONTENT #{Oj.dump(attributes, mode: :compat)}"))[:@rid]
+        @rid = odb.command.execute(command_text: URI.encode("CREATE EDGE #{node.name} FROM #{attributes.delete(:out)} TO #{attributes.delete(:in)} CONTENT #{Oj.dump(attributes, mode: :compat)}"))[:result].first[:@rid]
         @version = 0
       end
 
