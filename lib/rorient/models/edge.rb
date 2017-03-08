@@ -10,6 +10,26 @@ module Rorient
     def self.all
       Rorient::NodesRetriever.new(self, "E").get_all
     end
+    
+    # Persist the edge attributes
+    def save
+      features = {
+        "@class" => node.name
+      }
+      
+      # We need to update
+      if defined?(@rid) && !@rid.nil?
+        features["@version"] = @version
+        odb.command.execute(command_text: URI.encode("UPDATE EDGE #{rid} MERGE #{features.merge(attributes)}"))
+        @version += 1
+      # we need to create
+      else
+        @rid = odb.command.execute(command_text: URI.encode("CREATE EDGE #{node.name} FROM #{attributes.delete(:out)} TO #{attributes.delete(:in)} CONTENT #{features.merge(attributes)}"))[:@rid]
+        @version = 0
+      end
+
+      return self
+    end
 
     def outV(types = nil)
       Rorient::NodesRetriever.new(self, "", :out, types)

@@ -1,6 +1,7 @@
 module Rorient
   module Format
     WrongArgsFormat = Class.new(StandardError) 
+    MissingArgsFormat = Class.new(StandardError) 
 
     def parse_from(args)
       return WrongArgsFormat unless args.is_a?(String) || args.is_a?(Array) 
@@ -16,6 +17,7 @@ module Rorient
 
     def parse_traverse(args)
       return WrongArgsFormat unless args.is_a?(Hash)
+      return MissingArgsFormat unless ([:fields, :from] - args.keys).empty?
       args.delete_if{|k,_| ![:fields, :from, :while, :strategy].include?(k) }
       args.map{ |arg_k, arg_v| args[arg_k] = send("parse_#{arg_k}", arg_v) if respond_to?("parse_#{arg_k}") }
       args
@@ -41,6 +43,10 @@ module Rorient
 
     def is_an_array_of_rids(args)
       args.map{|arg| Rorient::Rid.new(rid_obj: arg).rid?}.all?
+    end
+
+    def sanitize_string(arg)
+      # TODO
     end
   end
 end

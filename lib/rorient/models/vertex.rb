@@ -17,6 +17,26 @@ module Rorient
     def self.all
       Rorient::NodesRetriever.new(self, "V").get_all
     end
+    
+    # Persist the vertex attributes
+    def save
+      features = {
+        "@class" => node.name
+      }
+      
+      # We need to update
+      if defined?(@rid) && !@rid.nil?
+        features["@version"] = @version
+        odb.document.update(features.merge(attributes), rid: rid)
+        @version += 1
+      # we need to create
+      else
+        @rid = odb.command.execute(command_text: URI.encode("CREATE VERTEX #{node.name} CONTENT #{features.merge(attributes)}"))[:@rid]
+        @version = 0
+      end
+
+      return self
+    end
 
     def outE(types = nil)
       Rorient::NodesRetriever.new(self, "E", :out, types)

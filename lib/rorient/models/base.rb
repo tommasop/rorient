@@ -205,7 +205,6 @@ module Rorient
       # We need to update
       if defined?(@rid) && !@rid.nil?
         features["@version"] = @version
-        puts features.merge(attributes)
         odb.document.update(features.merge(attributes), rid: rid)
         @version += 1
       # we need to create
