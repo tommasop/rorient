@@ -1,8 +1,4 @@
-module Rorient::Maker::Util
-  self.included(klass)
-    klass.extend(self)
-  end
-
+module Rorient::Queries::Maker::Util
   def croak(message)
     raise Rorient::Maker::Error.new(message)
   end
@@ -35,17 +31,17 @@ module Rorient::Maker::Util
   end
 
   def quote_identifier(label, quote_char, name_sep)
-    return label if label == '*';
-    return label unless name_sep;
+    return label if label == '*'
+    return label unless name_sep
     label.to_s.split(/#{Regexp.escape(name_sep)}/).map {|e| e == '*' ? e : "#{quote_char}#{e}#{quote_char}" }.join(name_sep)
   end
-  module_function :quote_identifier
-  public :quote_identifier
+  # module_function :quote_identifier
+  # public :quote_identifier
 
   def bind_param(sql, bind)
     raise Rorient::Maker::Error.new('bind arity mismatch') if sql.count('?') != bind.size
     i = -1; sql.gsub('?') { Rorient::Maker::Quoting.quote(bind[i+=1]) }
   end
-  module_function :bind_param
-  public :bind_param
+  # module_function :bind_param
+  # public :bind_param
 end

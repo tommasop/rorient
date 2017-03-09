@@ -34,7 +34,15 @@ module Rorient
   # client direct queries
   autoload :MetaQueries, "rorient/queries/meta_queries"
   autoload :GraphQueries, "rorient/queries/graph_queries"
-  autoload :QueryBuilder, "rorient/queries/query_builder"
+
+  # query maker
+  autoload :Queries, "rorient/queries/queries"
+  Queries.autoload :Maker, "rorient/queries/maker"
+  Queries::Maker.autoload :Error, "rorient/queries/maker/error"
+  Queries::Maker.autoload :Util, "rorient/queries/maker/util"
+  Queries::Maker.autoload :Quoting, "rorient/queries/maker/quoting"
+  Queries::Maker.autoload :Traverse, "rorient/queries/maker/traverse"
+  Queries::Maker.autoload :Select, "rorient/queries/maker/select"
 
   # HTTP API Class to deal with OrientDB errors
   autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"
