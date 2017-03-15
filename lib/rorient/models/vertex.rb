@@ -18,6 +18,38 @@ module Rorient
       Rorient::NodesRetriever.new(self, "V").get_all
     end
     
+    def self.outE(types = nil)
+      Rorient::NodesRetriever.new(self, "E", :out, types)
+    end
+
+    def self.inE(types = nil)
+      Rorient::NodesRetriever.new(self, "E", :in, types)
+    end
+
+    def self.bothE(types = nil)
+      Rorient::NodesRetriever.new(self, "E", :both, types)
+    end
+
+    def self.out(types = nil)
+      Rorient::NodesRetriever.new(self, "", :out, types)
+    end
+
+    def self.in(types = nil)
+      Rorient::NodesRetriever.new(self, "", :in, types)
+    end
+
+    def self.both(types = nil)
+      Rorient::NodesRetriever.new(self, "", :both, types)
+    end
+
+    def self.traverseI(types = nil, depth = nil, strategy = nil)
+      Rorient::NodesRetriever.new(self, "T", :in, types).depth(depth).strategy(strategy)
+    end
+    
+    def self.traverseO(types = nil, depth = nil, strategy = nil)
+      Rorient::NodesRetriever.new(self, "T", :out, types).depth(depth).strategy(strategy)
+    end
+
     # Persist the vertex attributes
     def save
       features = {

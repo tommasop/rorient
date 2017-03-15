@@ -12,7 +12,6 @@ module Rorient
       @o_classes = o_classes ? [o_classes].flatten : nil
       @depth = nil
       @strategy = nil
-      @get_all = nil
     end
 
     def depth(level = nil)

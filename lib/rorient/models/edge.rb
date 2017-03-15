@@ -11,6 +11,18 @@ module Rorient
       Rorient::NodesRetriever.new(self, "E").get_all
     end
     
+    def self.outV(types = nil)
+      Rorient::NodesRetriever.new(self, "", :out, types)
+    end
+
+    def self.inV(types = nil)
+      Rorient::NodesRetriever.new(self, "", :in, types)
+    end
+
+    def self.bothV(types = nil)
+      Rorient::NodesRetriever.new(self, "", :both, types)
+    end
+    
     # Persist the edge attributes
     def save
       features = {
