@@ -33,7 +33,12 @@ class Rorient::Queries::Maker::Select
   end
 
   def _from
-    @subquery || @_from
+    @subquery ? @subquery.query : @_from
+  end
+
+  def where(*args)
+    @_where = parse_args(args) 
+    self
   end
 
   def limit(record_number = 20)
@@ -54,7 +59,7 @@ class Rorient::Queries::Maker::Select
   end
 
   def query
-    @query << _fields << _from << _while << _limit << _order
+    @query << _fields << _from << _where << _limit << _order
     @query.compact.flatten.join(" ")
   end
 end

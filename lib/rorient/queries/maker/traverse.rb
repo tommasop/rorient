@@ -34,7 +34,7 @@ class Rorient::Queries::Maker::Traverse
   end
 
   def _from
-    @subquery || @_from
+    @subquery ? @subquery.query : @_from
   end
 
   def maxdepth(depth_level = 0)
