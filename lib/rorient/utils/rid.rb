@@ -24,7 +24,8 @@ module Rorient
     end
 
     def rid?
-      !!(@rid.match(/(#?\d+:{1}\d+)|(\d+:{1}\d+)/)) raise NoRidFound 
+      raise NoRidFound if @rid.nil?
+      !!(@rid.match(/(#?\d+:{1}\d+)|(\d+:{1}\d+)/)) 
     end
     
     def rid!
