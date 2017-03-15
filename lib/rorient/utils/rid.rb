@@ -10,7 +10,7 @@ module Rorient
     end
 
     def rid
-      rid? ? @rid.gsub("#","") : NoRidFound
+      @rid.gsub("#","") if rid?
     end
 
     def extract_rid_from_hash
@@ -24,7 +24,7 @@ module Rorient
     end
 
     def rid?
-      !!(@rid.match(/(#?\d+:{1}\d+)|(\d+:{1}\d+)/)) 
+      !!(@rid.match(/(#?\d+:{1}\d+)|(\d+:{1}\d+)/)) rescue NoRidFound 
     end
     
     def rid!
