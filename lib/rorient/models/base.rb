@@ -96,11 +96,11 @@ module Rorient
     end
     
     def self.first
-      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid/1"))[:result].first)
+      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid/1"))[:result].first || {})
     end
     
     def self.last
-      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid desc/1"))[:result].first)
+      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid desc/1"))[:result].first || {})
     end
 
     # Syntactic sugar for Node.new(atts).save
