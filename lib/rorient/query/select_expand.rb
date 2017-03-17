@@ -1,22 +1,22 @@
-class Rorient::Queries::Maker::Traverse
+class Rorient::Query::SelectExpand
   include Enumerable
-  include Rorient::Queries::Maker::Util
+  include Rorient::Query::Util
   
   class SubqueryAlreadyInitialized < StandardError; end
   class FromAlreadyInitialized < StandardError; end
-  class MaxdepthAlreadyInitialized < StandardError; end
+  class WrongOrderDir < StandardError; end
   class LimitAlreadyInitialized < StandardError; end
 
-  attr_reader :_fields, :_maxdepth, :_while, :_limit, :_strategy
+  attr_reader :db, :_fields, :_where, :_limit, :_order
 
-  def initialize
-    @query = ["TRAVERSE"]
+  def initialize(db)
+    @db = db 
+    @query = ["SELECT"]
     @_fields = []
     @_from = ["FROM"]
-    @_maxdepth = nil
-    @_while = {}
+    @_where = {}
     @_limit = nil
-    @_strategy = nil 
+    @_order = nil 
   end
 
   def fields(*args)
@@ -37,20 +37,19 @@ class Rorient::Queries::Maker::Traverse
     @subquery ? @subquery.query : @_from
   end
 
-  def maxdepth(depth_level = 0)
-    raise LimitAlreadyInitialized if @_limit
-    @_maxdepth = "MAXDEPTH #{depth_level}"
+  def where(*args)
+    @_where = parse_args(args) 
     self
   end
-  
+
   def limit(record_number = 20)
-    raise MaxdepthAlreadyInitialized if @_maxdepth
     @_limit = "LIMIT #{record_number}"
     self
   end
 
-  def strategy(type = "DEPTH_FIRST")
-    @_strategy = "STRATEGY #{type}"
+  def order(dir = "ASC", *args)
+    raise WrongOrderDir if ! ["ASC", "DESC"].include?(dir)
+    @_order = "ORDER BY #{parse_args(args).join(",")} #{dir}"
     self
   end
   
@@ -61,8 +60,9 @@ class Rorient::Queries::Maker::Traverse
   end
 
   def query
-    @query << _fields << _from << _maxdepth << _while << _limit << _strategy
-    @query.compact.flatten.join(" ")
+    @query << _fields << _from << _where << _limit << _order
+    # @query.compact.flatten.join(" ")
+    db.query.execute(query_text: URI.encode(@query.compact.flatten.join(" ")))
   end
 end
 

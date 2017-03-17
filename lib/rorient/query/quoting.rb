@@ -2,7 +2,7 @@
 require 'yaml'
 require 'bigdecimal'
 
-module Rorient::Maker::Quoting
+module Rorient::Query::Quoting
   # Quotes the value rather than column name to help prevent
   # {SQL injection attacks}[http://en.wikipedia.org/wiki/SQL_injection].
   def self.quote(value, column = nil)

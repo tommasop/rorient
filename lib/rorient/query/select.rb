@@ -1,15 +1,16 @@
-class Rorient::Queries::Maker::Select
+class Rorient::Query::Select
   include Enumerable
-  include Rorient::Queries::Maker::Util
+  include Rorient::Query::Util
   
   class SubqueryAlreadyInitialized < StandardError; end
   class FromAlreadyInitialized < StandardError; end
   class WrongOrderDir < StandardError; end
   class LimitAlreadyInitialized < StandardError; end
 
-  attr_reader :_fields, :_where, :_limit, :_order
+  attr_reader :db, :_fields, :_where, :_limit, :_order
 
-  def initialize
+  def initialize(db)
+    @db = db 
     @query = ["SELECT"]
     @_fields = []
     @_from = ["FROM"]
@@ -60,7 +61,8 @@ class Rorient::Queries::Maker::Select
 
   def query
     @query << _fields << _from << _where << _limit << _order
-    @query.compact.flatten.join(" ")
+    # @query.compact.flatten.join(" ")
+    db.query.execute(query_text: URI.encode(@query.compact.flatten.join(" ")))
   end
 end
 

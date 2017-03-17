@@ -1,3 +1,3 @@
-class Rorient::Maker
+class Rorient::Query
   class Error < StandardError; end
 end

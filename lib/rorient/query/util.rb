@@ -1,6 +1,6 @@
-module Rorient::Queries::Maker::Util
+module Rorient::Query::Util
   def croak(message)
-    raise Rorient::Maker::Error.new(message)
+    raise Rorient::Error.new(message)
   end
 
   def array_wrap(val)

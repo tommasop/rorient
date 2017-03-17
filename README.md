@@ -107,6 +107,12 @@ The library has methods that mimicks the OrientDB graph query methods.
 ### Vertexes
 
 ```
+User.out.to_a # returns all out vertexes from User
+User.in.to_a # returns all in vertexes from User
+User.both.to_a # returns all in and out vertexes from User
+User.outE.to_a # returns all out edges from User
+User.inE.to_a # returns all in edges from User
+
 u = User.first
 
 u.out.to_a # returns all out vertexes from user
@@ -123,7 +129,16 @@ Each method can be given one or more edge classes as a filter for the nodes to b
 
 ```
 u.out("Has").to_a # returns all Has out vertexes from user
-u.out(["Has", "Friends"]).to_a
+u.out("Has", "Friends").to_a
+```
+
+Each edge class can be given one or more fields on which to filter
+
+```
+User.out("Has" => {name: "George", surname: "White"}).to_a 
+u.out("Has" => {name: "George", surname: "White"}).to_a 
+User.out("Has" => {name: "George", surname: "White"}, "Friends" => {job: "doctor"}).to_a 
+u.out("Has" => {name: "George", surname: "White"}, "Friends" => {job: "doctor"}).to_a 
 ```
 
 Specifying the traversal edges results in a performance boost.

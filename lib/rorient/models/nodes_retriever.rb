@@ -25,7 +25,7 @@ module Rorient
     end
 
     def get_all
-      @get_all = true
+      @get_all ? @get_all = nil : @get_all = true
       self
     end
 

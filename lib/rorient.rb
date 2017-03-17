@@ -32,17 +32,17 @@ module Rorient
   autoload :BatchResource, "rorient/resources/batch_resource"
 
   # client direct queries
-  autoload :MetaQueries, "rorient/queries/meta_queries"
-  autoload :GraphQueries, "rorient/queries/graph_queries"
+  autoload :MetaQueries, "rorient/query/meta_queries"
+  autoload :GraphQueries, "rorient/query/graph_queries"
 
   # query maker
-  autoload :Queries, "rorient/queries/queries"
-  Queries.autoload :Maker, "rorient/queries/maker"
-  Queries::Maker.autoload :Error, "rorient/queries/maker/error"
-  Queries::Maker.autoload :Util, "rorient/queries/maker/util"
-  Queries::Maker.autoload :Quoting, "rorient/queries/maker/quoting"
-  Queries::Maker.autoload :Traverse, "rorient/queries/maker/traverse"
-  Queries::Maker.autoload :Select, "rorient/queries/maker/select"
+  autoload :Query, "rorient/query/query"
+  Query.autoload :Error, "rorient/query/error"
+  Query.autoload :Util, "rorient/query/util"
+  Query.autoload :Quoting, "rorient/query/quoting"
+  Query.autoload :Traverse, "rorient/query/traverse"
+  Query.autoload :Select, "rorient/query/select"
+  Query.autoload :SelectExpand, "rorient/query/select_expand"
 
   # HTTP API Class to deal with OrientDB errors
   autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"
