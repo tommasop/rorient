@@ -7,11 +7,10 @@ class Rorient::Query::SelectExpand
   class WrongOrderDir < StandardError; end
   class LimitAlreadyInitialized < StandardError; end
 
-  attr_reader :db, :_fields, :_where, :_limit, :_order
+  attr_reader :db, :expand, :_fields, :_where, :_limit, :_order
 
   def initialize(db)
     @db = db 
-    @query = ["SELECT"]
     @_fields = []
     @_from = ["FROM"]
     @_where = {}
@@ -19,13 +18,32 @@ class Rorient::Query::SelectExpand
     @_order = nil 
   end
 
-  def fields(*args)
-    @_fields = @_fields + parse_args(args)
+  # I need to know:
+  # 1. v or e default "" which means in()
+  # 2. an edge || vertex class 
+  # 3. a named hash of filters achieved with the ruby 2 double splat [**] operator
+  def in(v_or_e = "", type = nil, **args)
+    field = "in#{v_or_e}"
+    type ? field << "('#{type}')" : field << "()"
+    field << "[#{args.map{|k,v| "#{k}=#{v}"}.join(",")}]" if !args.empty?
+    @_fields << field 
+    self
+  end
+  
+  def out(v_or_e = "", type = nil, **args)
+    field = "out#{v_or_e}"
+    type ? field << "('#{type}')" : field << "()"
+    field << "[#{args.map{|k,v| "#{k}=#{v}"}.join(",")}]" if !args.empty?
+    @_fields << field 
     self
   end
 
-  def _fields
-    @_fields.join(",")
+  def both(v_or_e = "", type = nil, **args)
+    field = "both#{v_or_e}"
+    type ? field << "('#{type}')" : field << "()"
+    field << "[#{args.map{|k,v| "#{k}=#{v}"}.join(",")}]" if !args.empty?
+    @_fields << field 
+    self
   end
 
   def from(*args)
@@ -34,13 +52,13 @@ class Rorient::Query::SelectExpand
   end
 
   def _from
-    @subquery ? @subquery.query : @_from
+    @subquery ? @_from << @subquery.query : @_from
   end
 
-  def where(*args)
-    @_where = parse_args(args) 
-    self
-  end
+ # def where(*args)
+ #   @_where = parse_args(args) 
+ #   self
+ # end
 
   def limit(record_number = 20)
     @_limit = "LIMIT #{record_number}"
@@ -56,13 +74,16 @@ class Rorient::Query::SelectExpand
   def subquery(type: "Select")
     raise SubqueryAlreadyInitialized if @subquery
     raise FromAlreadyInitialized if !@_from.empty?
-    @subquery ||= "Rorient::Queries::Maker::#{type}".constantize.new
+    @subquery ||= "Rorient::Query::#{type}".constantize.new
   end
 
-  def query
-    @query << _fields << _from << _where << _limit << _order
-    # @query.compact.flatten.join(" ")
-    db.query.execute(query_text: URI.encode(@query.compact.flatten.join(" ")))
+  def osql
+    q = ["SELECT EXPAND("] << _fields.join(".") << ")" << _from << _limit << _order
+    q.compact.flatten.join(" ")
+  end
+
+  def execute
+    db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))
   end
 end
 

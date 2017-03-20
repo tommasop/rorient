@@ -1,6 +1,6 @@
 module Rorient::Query::Util
   def croak(message)
-    raise Rorient::Error.new(message)
+    raise Rorient::Query::Error.new(message)
   end
 
   def array_wrap(val)
@@ -11,7 +11,7 @@ module Rorient::Query::Util
   def parse_args(*args)
     if args.size > 1
       # method('a', 'b') #=> ['a', 'b']
-      return args
+      return args.map{ |arg| parse_args(arg) }
     else
       args = args.first
       case args

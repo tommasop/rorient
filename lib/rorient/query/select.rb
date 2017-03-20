@@ -7,7 +7,7 @@ class Rorient::Query::Select
   class WrongOrderDir < StandardError; end
   class LimitAlreadyInitialized < StandardError; end
 
-  attr_reader :db, :_fields, :_where, :_limit, :_order
+  attr_reader :db, :expand, :_fields, :_where, :_limit, :_order
 
   def initialize(db)
     @db = db 
@@ -34,7 +34,7 @@ class Rorient::Query::Select
   end
 
   def _from
-    @subquery ? @subquery.query : @_from
+    @subquery ? @_from << @subquery.query : @_from
   end
 
   def where(*args)
@@ -56,13 +56,16 @@ class Rorient::Query::Select
   def subquery(type: "Select")
     raise SubqueryAlreadyInitialized if @subquery
     raise FromAlreadyInitialized if !@_from.empty?
-    @subquery ||= "Rorient::Queries::Maker::#{type}".constantize.new
+    @subquery ||= "Rorient::Query::#{type}".constantize.new
   end
 
-  def query
+  def osql
     @query << _fields << _from << _where << _limit << _order
-    # @query.compact.flatten.join(" ")
-    db.query.execute(query_text: URI.encode(@query.compact.flatten.join(" ")))
+    @query.compact.flatten.join(" ")
+  end
+
+  def execute
+    db.query.execute(query_text: URI.encode(osql))
   end
 end
 
