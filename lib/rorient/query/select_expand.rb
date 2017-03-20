@@ -47,12 +47,17 @@ class Rorient::Query::SelectExpand
   end
 
   def from(*args)
-    @_from << parse_args(args)
+    if args.first.is_a? Array
+      @_from << "[#{args.first.map{|r| Rorient::Rid.new(rid_obj: r).rid }.join(",")}]" 
+    else
+      @_from << parse_args(args)
+    end
     self
   end
 
   def _from
-    @subquery ? @_from << @subquery.query : @_from
+    @_from = "(" << @subquery.osql << ")" if @subquery
+    @_from
   end
 
  # def where(*args)

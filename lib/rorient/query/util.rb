@@ -11,7 +11,7 @@ module Rorient::Query::Util
   def parse_args(*args)
     if args.size > 1
       # method('a', 'b') #=> ['a', 'b']
-      return args.map{ |arg| parse_args(arg) }
+      return args #.map{ |arg| parse_args(arg) }
     else
       args = args.first
       case args
