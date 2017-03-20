@@ -48,7 +48,7 @@ class Rorient::Query::SelectExpand
 
   def from(args)
     if args.is_a? Array
-      @_from << "[#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.join(",")}]" 
+      @_from << "[#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 
     else
       @_from << parse_args(args)
     end
