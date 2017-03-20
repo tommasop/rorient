@@ -51,7 +51,7 @@ class Rorient::Query::SelectExpand
     if args.is_a? Array
       @_from = "FROM [#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 
     else
-      @_from = "FROM #{parse_args(args)}"
+      @_from = "FROM #{args}"
     end
     self
   end
@@ -88,7 +88,7 @@ class Rorient::Query::SelectExpand
   end
 
   def execute
-    db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))
+    db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
   end
 end
 

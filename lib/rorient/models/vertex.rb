@@ -14,6 +14,10 @@ module Rorient
       end
     end
 
+    def self.query(type = "select_expand")
+      @query = Rorient::Query.send(type, self.odb).from(self.name)
+    end
+
     def self.all
       Rorient::NodesRetriever.new(self, "V").get_all
     end
@@ -68,6 +72,10 @@ module Rorient
       end
 
       return self
+    end
+    
+    def query(type = "select_expand")
+      @query ||= Rorient::Query.send(type, self.class.odb).from(self.rid)
     end
 
     def outE(types = nil)
