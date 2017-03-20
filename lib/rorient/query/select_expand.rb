@@ -12,7 +12,7 @@ class Rorient::Query::SelectExpand
   def initialize(db)
     @db = db 
     @_fields = []
-    @_from = ["FROM"]
+    @_from = nil 
     @_where = {}
     @_limit = nil
     @_order = nil 
@@ -47,16 +47,17 @@ class Rorient::Query::SelectExpand
   end
 
   def from(args)
+    raise SubqueryAlreadyInitialized if @subquery
     if args.is_a? Array
-      @_from << "[#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 
+      @_from = "FROM [#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 
     else
-      @_from << parse_args(args)
+      @_from = "FROM #{parse_args(args)}"
     end
     self
   end
 
   def _from
-    @_from = "(" << @subquery.osql << ")" if @subquery
+    @_from = "FROM (" << @subquery.osql << ")" if @subquery
     @_from
   end
 
@@ -77,9 +78,8 @@ class Rorient::Query::SelectExpand
   end
   
   def subquery(type: "Select")
-    raise SubqueryAlreadyInitialized if @subquery
-    raise FromAlreadyInitialized if !@_from.empty?
-    @subquery ||= "Rorient::Query::#{type}".constantize.new
+    raise FromAlreadyInitialized if @_from
+    @subquery ||= "Rorient::Query::#{type}".constantize.new(db)
   end
 
   def osql
