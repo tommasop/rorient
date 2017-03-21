@@ -8,7 +8,7 @@ require "purdytest"
 #end
 
 class Testing
-  SERVER = ENV['DATABASE_URL'] 
+  SERVER = ENV['DATABASE_URL']
   USERNAME  = ENV['DATABASE_USER']
   PASSWORD  = ENV['DATABASE_PASSWORD']
   DATABASE   = ENV['DATABASE_NAME']

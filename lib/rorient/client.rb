@@ -1,4 +1,5 @@
 require "faraday"
+require "uri"
 
 module Rorient
   class Client
@@ -51,7 +52,7 @@ module Rorient
 
     def connection_options
       {
-        url: @server,
+        url: @server.dup.force_encoding(Encoding::BINARY),
         headers: {
           content_type: "application/json",
           content_length: "0", 
