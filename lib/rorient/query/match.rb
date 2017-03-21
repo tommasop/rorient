@@ -17,24 +17,26 @@ class Rorient::Query::Match
   end
 
   def start(start = "V", where: {})
-    fields(:start, class: start, as: start.downcase, where: where)
-    self
+    fields(class: start, as: start.downcase, where: where)
   end
 
   # I need to know:
-  # 1. direction: in | out | both
+  # 1. direction: in | out | both | start
   # 2. v or e default "" which means in()
   # 3. an edge || vertex class 
   # 4. a named hash of filters achieved with the ruby 2 double splat [**] operator
   def fields(direction = nil, v_or_e = "", type = nil, **args)
-    @_fields[0] = fields(args) if direction.eql?(:start)
     field = ""
     if direction
       field = "#{direction}#{v_or_e}"
       type ? field << "('#{type}')" : field << "()"
     end
     field << "{#{args.map{|k,v| "#{k}: #{v}"}.join(",")}}" if !args.empty?
-    @_fields << field if !field.empty? 
+    if caller_locations(1,1)[0].label.eql?("start")
+      @_fields.empty? ? @_fields << field : @_fields[0] = field
+    else  
+      @_fields << field 
+    end
     self
   end
 
