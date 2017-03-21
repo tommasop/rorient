@@ -13,6 +13,7 @@ module Rorient
         @file = file
 
         DELEGATED.each do |method|
+          instance_variable_set("@#{method}", DateTime.parse(file.send(method).to_s).iso8601) if method == :datetime
           instance_variable_set("@#{method}", file.send(method))
         end
       end
