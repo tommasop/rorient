@@ -73,6 +73,12 @@ module Rorient
 
       return self
     end
+
+    # Delete the node
+    def delete
+      odb.command.execute(command_text: URI.encode("DELETE VERTEX #{rid}")) if !new?
+      return self
+    end
     
     def query(type = "select_expand")
       @query ||= Rorient::Query.send(type, self.class.odb).from(self.rid)

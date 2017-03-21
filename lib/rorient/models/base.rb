@@ -218,7 +218,6 @@ module Rorient
     # Delete the node
     def delete
       odb.document.delete(rid: rid) if !new? 
-
       return self
     end
 

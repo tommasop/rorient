@@ -14,5 +14,9 @@ module Rorient
     def self.traverse(db)
       Rorient::Query::Traverse.new(db)
     end
+    
+    def self.match(db)
+      Rorient::Query::Match.new(db)
+    end
   end
 end

@@ -43,6 +43,12 @@ module Rorient
       return self
     end
 
+    # Delete the node
+    def delete
+      odb.command.execute(command_text: URI.encode("DELETE EDGE #{rid}")) if !new?
+      return self
+    end
+
     def outV(types = nil)
       Rorient::NodesRetriever.new(self, "", :out, types)
     end
