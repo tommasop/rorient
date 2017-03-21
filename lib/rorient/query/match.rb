@@ -1,4 +1,4 @@
-class Rorient::Query::SelectExpand
+class Rorient::Query::Match
   include Enumerable
   include Rorient::Query::Util
   

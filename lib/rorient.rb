@@ -43,6 +43,7 @@ module Rorient
   Query.autoload :Traverse, "rorient/query/traverse"
   Query.autoload :Select, "rorient/query/select"
   Query.autoload :SelectExpand, "rorient/query/select_expand"
+  Query.autoload :Match, "rorient/query/match"
 
   # HTTP API Class to deal with OrientDB errors
   autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"

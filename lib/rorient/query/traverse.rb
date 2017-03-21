@@ -61,7 +61,7 @@ class Rorient::Query::Traverse
   end
 
   def query
-    @query << _fields << _from << _maxdepth << _while << _limit << _strategy
+    @query << _fields << _from << _maxdepth << _while << _limit << _strategy << "/-1"
     @query.compact.flatten.join(" ")
   end
 end

@@ -60,7 +60,7 @@ class Rorient::Query::Select
   end
 
   def osql
-    @query << _fields << _from << _where << _limit << _order
+    @query << _fields << _from << _where << _limit << _order << "/-1"
     @query.compact.flatten.join(" ")
   end
 
