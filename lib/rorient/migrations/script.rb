@@ -13,7 +13,7 @@ module Rorient
         @file = file
 
         DELEGATED.each do |method|
-          instance_variable_set("@#{method}", DateTime.parse(file.send(method).to_s).iso8601) if method == :datetime
+          # instance_variable_set("@#{method}", DateTime.parse(file.send(method).to_s).iso8601) if method == :datetime
           instance_variable_set("@#{method}", file.send(method))
         end
       end
@@ -117,7 +117,7 @@ module Rorient
         case @type 
         when "migration"
           puts "[+] Migrating history table"
-          @database.driver.document.create("@class": history, time: @datetime, name: @name, type: @type, executed: Time.now.to_s)
+          @database.driver.document.create("@class": history, time: @datetime, name: @name, type: @type, executed: Time.now.iso8601)
         when "rollback"
           puts "[+] Rolling back history table"
           migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY time DESC LIMIT 1"))[:result].first
