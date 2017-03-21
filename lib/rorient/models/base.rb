@@ -131,7 +131,6 @@ module Rorient
     #   # => 1
     #
     def rid
-      puts @rid
 			Rid.new(rid_obj: @rid).rid
     end
 
