@@ -17,8 +17,10 @@ class Rorient::Query::Match
     @_order = nil 
   end
 
-  def start(start = "V", where: nil)
-    @_start = "{class: #{start}, as: #{start.downcase}}" 
+  def start(start, where: nil)
+    raise NotValidDirection.new("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
+    raise NotValidType.new("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
+    @_start = "{class: #{start.name}, as: #{start.name.underscore}" 
     @_start_where = Rorient::Query::Where.new(where).osql
   end
 
@@ -27,51 +29,50 @@ class Rorient::Query::Match
   # 2. v or e default "" which means in()
   # 3. an edge || vertex class 
   # 4. a named hash of filters achieved with the ruby 2 double splat [**] operator
-  def fields(direction = nil, v_or_e = "", type = nil, **args)
-    field = ""
-    if direction
-      field = "#{direction}#{v_or_e}"
-      type ? field << "('#{type}')" : field << "()"
-    end
-    field << "{#{args.map{|k,v| "#{k}: #{v}"}.join(",")}}" if !args.empty?
+  def fields(direction, v_or_e = "", type)
+    raise NotValidDirection.new("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
+    raise NotValidType.new("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
+    field = "#{direction}#{v_or_e}()"
+    field << "{class: #{type.name}, as: #{type.name.underscore}}"
     @_fields << field 
+    @_where << nil
     self
   end
 
-  def in(type = nil, **args)
-    fields(:in, "", type, args)
+  def in(type)
+    fields(:in, "", type)
   end
   
-  def inE(type = nil, **args)
-    fields(:in, "E", type, args)
+  def inE(type)
+    fields(:in, "E", type)
   end
   
-  def inV(type = nil, **args)
-    fields(:in, "V", type, args)
+  def inV(type)
+    fields(:in, "V", type)
   end
   
-  def out(type = nil, **args)
-    fields(:out, "", type, args)
+  def out(type)
+    fields(:out, "", type)
   end
   
-  def outE(type = nil, **args)
-    fields(:out, "E", type, args)
+  def outE(type)
+    fields(:out, "E", type)
   end
 
-  def outV(type = nil, **args)
-    fields(:out, "V", type, args)
+  def outV(type)
+    fields(:out, "V", type)
   end
 
-  def both(type = nil, **args)
-    fields(:both, "", type, args)
+  def both(type)
+    fields(:both, "", type)
   end
   
-  def bothE(type = nil, **args)
-    fields(:both, "E", type, args)
+  def bothE(type)
+    fields(:both, "E", type)
   end
 
-  def bothV(type = nil, **args)
-    fields(:both, "V", type, args)
+  def bothV(type)
+    fields(:both, "V", type)
   end
 
   def where(*args)
