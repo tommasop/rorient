@@ -17,7 +17,7 @@ class Rorient::Query::Match
   end
 
   def start(start = "V", where: {})
-    fields(class: start, as: start.downcase, where: where)
+    @_start = "{class: #{start}, as: #{start.downcase}, where: #{Rorient::Query::Where.new(where).osql}}" 
   end
 
   # I need to know:
