@@ -4,13 +4,19 @@ class Rorient::Query::Where
   
   attr_reader :conditions, :operators
 
-  def initialize(**args)
+  def initialize(**conditions)
     @conditions = {}
     @operators = []
   end
 
+  def conditions(*args)
+    evaluator = args
+    
+  end
+
   def osql
-    q = ["SELECT EXPAND("] << _fields.join(".") << ")" << _from << _limit << _order << "/-1"
+    return nil if conditions.empty?
+    q = "" 
     q.compact.flatten.join(" ")
   end
 end

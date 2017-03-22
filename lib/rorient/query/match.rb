@@ -10,14 +10,16 @@ class Rorient::Query::Match
   def initialize(db)
     @db = db 
     @_start = nil
+    @_start_where = nil
     @_fields = []
-    @_where = {}
+    @_where = []
     @_limit = nil
     @_order = nil 
   end
 
-  def start(start = "V", where: {})
-    @_start = "{class: #{start}, as: #{start.downcase}, where: #{Rorient::Query::Where.new(where).osql}}" 
+  def start(start = "V", where: nil)
+    @_start = "{class: #{start}, as: #{start.downcase}}" 
+    @_start_where = Rorient::Query::Where.new(where).osql
   end
 
   # I need to know:
@@ -32,30 +34,50 @@ class Rorient::Query::Match
       type ? field << "('#{type}')" : field << "()"
     end
     field << "{#{args.map{|k,v| "#{k}: #{v}"}.join(",")}}" if !args.empty?
-    if caller_locations(1,1)[0].label.eql?("start")
-      @_fields.empty? ? @_fields << field : @_fields[0] = field
-    else  
-      @_fields << field 
-    end
+    @_fields << field 
     self
   end
 
-  def in(v_or_e = "", type = nil, **args)
-    fields(:in, v_or_e, type, args)
+  def in(type = nil, **args)
+    fields(:in, "", type, args)
   end
   
-  def out(v_or_e = "", type = nil, **args)
-    fields(:out, v_or_e, type, args)
+  def inE(type = nil, **args)
+    fields(:in, "E", type, args)
+  end
+  
+  def inV(type = nil, **args)
+    fields(:in, "V", type, args)
+  end
+  
+  def out(type = nil, **args)
+    fields(:out, "", type, args)
+  end
+  
+  def outE(type = nil, **args)
+    fields(:out, "E", type, args)
   end
 
-  def both(v_or_e = "", type = nil, **args)
-    fields(:both, v_or_e, type, args)
+  def outV(type = nil, **args)
+    fields(:out, "V", type, args)
   end
 
- # def where(*args)
- #   @_where = parse_args(args) 
- #   self
- # end
+  def both(type = nil, **args)
+    fields(:both, "", type, args)
+  end
+  
+  def bothE(type = nil, **args)
+    fields(:both, "E", type, args)
+  end
+
+  def bothV(type = nil, **args)
+    fields(:both, "V", type, args)
+  end
+
+  def where(*args)
+    @_where << Rorient::Query::Where.new(args).osql 
+    self
+  end
 
   def limit(record_number = 20)
     @_limit = "LIMIT #{record_number}"
