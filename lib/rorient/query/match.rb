@@ -74,9 +74,9 @@ class Rorient::Query::Match
     fields(:both, "V", type)
   end
 
-  def where(*args)
+  def where(*args, &block)
     bark("The query can have as many wheres as its traversal levels") if _where.count == _fields.count
-    @_where << Rorient::Query::Where.new(args).osql 
+    @_where << Rorient::Query::Where.new(args, &block) 
     self
   end
 
@@ -97,7 +97,9 @@ class Rorient::Query::Match
   end
 
   def execute
-    db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
+    results = db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
+    @_fields = []     
+    results
   end
 end
 

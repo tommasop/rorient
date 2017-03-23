@@ -117,7 +117,7 @@ module Rorient
         case @type 
         when "migration"
           puts "[+] Migrating history table"
-          @database.driver.document.create("@class": history, time: @datetime, name: @name, type: @type, executed: Time.now.utc.round(10).iso8601(3))
+          @database.driver.document.create("@class": history, time: @datetime, name: @name, type: @type, executed: Time.now.utc.iso8601(3))
         when "rollback"
           puts "[+] Rolling back history table"
           migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY time DESC LIMIT 1"))[:result].first
