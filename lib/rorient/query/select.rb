@@ -2,11 +2,6 @@ class Rorient::Query::Select
   include Enumerable
   include Rorient::Query::Util
   
-  class SubqueryAlreadyInitialized < StandardError; end
-  class FromAlreadyInitialized < StandardError; end
-  class WrongOrderDir < StandardError; end
-  class LimitAlreadyInitialized < StandardError; end
-
   attr_reader :db, :expand, :_fields, :_where, :_limit, :_order
 
   def initialize(db)
@@ -29,6 +24,7 @@ class Rorient::Query::Select
   end
 
   def from(*args)
+    bark("Subquery already initialized as current query FROM") if @subquery
     @_from << parse_args(args)
     self
   end
@@ -48,14 +44,13 @@ class Rorient::Query::Select
   end
 
   def order(dir = "ASC", *args)
-    raise WrongOrderDir if ! ["ASC", "DESC"].include?(dir)
+    bark("Wrong order DIR only ASC | DESC possible") if ! ["ASC", "DESC"].include?(dir)
     @_order = "ORDER BY #{parse_args(args).join(",")} #{dir}"
     self
   end
   
   def subquery(type: "Select")
-    raise SubqueryAlreadyInitialized if @subquery
-    raise FromAlreadyInitialized if !@_from.empty?
+    bark("FROM already initialized for current query") if @subquery
     @subquery ||= "Rorient::Query::#{type}".constantize.new
   end
 

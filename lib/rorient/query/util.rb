@@ -1,5 +1,5 @@
 module Rorient::Query::Util
-  def croak(message)
+  def bark(message)
     raise Rorient::Query::Error.new(message)
   end
 

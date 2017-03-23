@@ -1,9 +1,6 @@
 class Rorient::Query::Match
   include Enumerable
   include Rorient::Query::Util
-  
-  class WrongOrderDir < StandardError; end
-  class LimitAlreadyInitialized < StandardError; end
 
   attr_reader :db, :_start, :_fields, :_where, :_limit, :_order
 
@@ -18,8 +15,8 @@ class Rorient::Query::Match
   end
 
   def start(start, where: nil)
-    raise NotValidDirection.new("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
-    raise NotValidType.new("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
+    bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
+    bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
     @_start = "{class: #{start.name}, as: #{start.name.underscore}" 
     @_start_where = Rorient::Query::Where.new(where).osql
   end
@@ -30,11 +27,13 @@ class Rorient::Query::Match
   # 3. an edge || vertex class 
   # 4. a named hash of filters achieved with the ruby 2 double splat [**] operator
   def fields(direction, v_or_e = "", type)
-    raise NotValidDirection.new("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
-    raise NotValidType.new("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
+    bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
+    bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
     field = "#{direction}#{v_or_e}()"
     field << "{class: #{type.name}, as: #{type.name.underscore}}"
     @_fields << field 
+    # for every pattern I create a nil where which
+    # can be positionally filled afterwards
     @_where << nil
     self
   end
@@ -76,6 +75,7 @@ class Rorient::Query::Match
   end
 
   def where(*args)
+    bark("The query can have as many wheres as its traversal levels") if _where.count == _fields.count
     @_where << Rorient::Query::Where.new(args).osql 
     self
   end
@@ -86,7 +86,7 @@ class Rorient::Query::Match
   end
 
   def order(dir = "ASC", *args)
-    raise WrongOrderDir if ! ["ASC", "DESC"].include?(dir)
+    bark("Wrong order DIR only ASC | DESC possible") if ! ["ASC", "DESC"].include?(dir)
     @_order = "ORDER BY #{parse_args(args).join(",")} #{dir}"
     self
   end

@@ -57,6 +57,7 @@ module Rorient
   Error = Class.new(StandardError)
   FailedCreate = Class.new(Rorient::Error)
   FailedUpdate = Class.new(Rorient::Error)
+  Query::Error = Class.new(Rorient::Error)
 
   class RateLimitReached < Rorient::Error
     attr_accessor :reset_at
