@@ -80,7 +80,9 @@ class Rorient::Query::SelectExpand
   end
 
   def execute
-    db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
+    results = db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
+    @_fields = []     
+    results
   end
 end
 

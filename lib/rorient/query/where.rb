@@ -9,11 +9,6 @@ class Rorient::Query::Where
     @operators = []
   end
 
-  def conditions(*args)
-    evaluator = args
-    
-  end
-
   def osql
     return nil if conditions.empty?
     q = "" 
