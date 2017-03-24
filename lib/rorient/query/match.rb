@@ -2,7 +2,7 @@ class Rorient::Query::Match
   include Enumerable
   include Rorient::Query::Util
 
-  attr_reader :db, :_start, :_fields, :_where, :_limit, :_order
+  attr_reader :db, :_start, :_start_where, :_fields, :_where, :_where_pos, :_ret, :_ret_pos, :_limit
 
   def initialize(db)
     @db = db 
@@ -10,6 +10,9 @@ class Rorient::Query::Match
     @_start_where = nil
     @_fields = []
     @_where = []
+    @_where_pos = 0
+    @_ret = []
+    @_ret_pos = 0
     @_limit = nil
     @_order = nil 
   end
@@ -76,8 +79,18 @@ class Rorient::Query::Match
   end
 
   def where(*args, &block)
-    bark("The query can have as many wheres as its traversal levels") if _where.count == _fields.count
-    @_where << Rorient::Query::Where.new(args, &block) 
+    bark("The query can have as many wheres as its traversal levels") if _where_pos == _fields.count
+    @_where[@_where_pos] =  Rorient::Query::Where.new(args, &block).osql 
+    @_where_pos += 1
+    self
+  end
+
+  def ret(*args)
+    bark("The query can have as many returns as its traversal levels") if _ret_pos > _fields.count
+    p @_ret
+    @_ret[@_ret_pos] = args
+    p @_ret
+    @_ret_pos += 1
     self
   end
 
@@ -86,14 +99,8 @@ class Rorient::Query::Match
     self
   end
 
-  def order(dir = "ASC", *args)
-    bark("Wrong order DIR only ASC | DESC possible") if ! ["ASC", "DESC"].include?(dir)
-    @_order = "ORDER BY #{parse_args(args).join(",")} #{dir}"
-    self
-  end
-  
   def osql
-    q = ["MATCH"] << _fields.join(".") << ")" << _from << _limit << _order << "/-1"
+    q = ["MATCH"] << _start << _fields.join(".") << _ret << _limit << "/-1"
     q.compact.flatten.join(" ")
   end
 
