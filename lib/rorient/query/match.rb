@@ -98,25 +98,25 @@ class Rorient::Query::Match
   end
 
   def execute
-    results = db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
-    @_fields, @_where, @_ret = []
-    @_where_pos, @_ret_pos = 0
-    results
+    results = db.query.execute(query_text: URI.encode(osql, " ,:#()[]{}"))[:result]
+    @_fields, @_where, @_ret = [[],[],[]]
+    @_where_pos, @_ret_pos = [0, 0]
+    results.map{|i| i[:@class].constantize.new(i)}
   end
 
   private
   
   def inject_where
     @_where.each_with_index do |filters, field_pos|
-      @_fields[field_pos] = (@_fields[field_pos].split("}")<< "where: (#{filters})}").join(", ") if filters 
+      filters ? (@_fields[field_pos].split("}")<< "where: (#{filters})}").join(", ") : @_fields[field_pos] 
     end
   end
 
   def inject_ret
-    @_ret.compact.each_with_index do |rets, field_pos|
-      rets.map!{|ret| _fields[field_pos].match(/\bas:\s+\K\w*/)[0] + ".#{ret}" }
+    asd_ret = @_ret.compact.each_with_index do |rets, field_pos|
+      rets.map{|ret| _fields[field_pos].match(/\bas:\s+\K\w*/)[0] + ".#{ret}" }
     end
-    "RETURN " << @_ret.flatten.join(" ")
+    asd_ret.empty? ? "RETURN $pathElements" : "RETURN " << asd_ret.flatten.join(" ")
   end
 end
 
