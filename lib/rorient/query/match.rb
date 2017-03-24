@@ -30,12 +30,8 @@ class Rorient::Query::Match
     field = direction ? "#{direction}#{v_or_e}()" : ""
     field << "{class: #{type.name}, as: #{type.name.underscore}}"
     @_fields << field 
-    @_ret << nil
-    if block
-      where(&block)
-    else
-      @_where << nil
-    end
+    @_ret << nil &&  @_where << nil
+    where(&block) if block
     self
   end
 
@@ -76,25 +72,19 @@ class Rorient::Query::Match
   end
 
   def where(*args, &block)
-    bark("The query can have as many wheres as its traversal levels") if ((_where_pos != _fields.count) && (_where_pos != 0 && _fields.count != 1)) 
+    bark("The query can have as many wheres as its traversal levels") if _where_pos == _fields.count
     @_where[@_where_pos] =  Rorient::Query::Where.new(args, &block).osql 
     @_where_pos += 1
     self
   end
-
+  
   def ret(*args)
-    bark("The query can have as many returns as its traversal levels") if _ret_pos != _fields.count
+    bark("The query can have as many returns as its traversal levels") if _ret_pos == _fields.count
     @_ret[@_ret_pos] = args
     @_ret_pos += 1
     self
   end
 
-  def _ret
-    @_ret.each_with_index do |rets, field_pos|
-      rets.map!{|ret| _fields[field_pos].split("as: ").last + ".#{ret}" }
-    end
-    @_ret.flatten.compact.join(" ")
-  end
 
   def limit(record_number = 20)
     @_limit = "LIMIT #{record_number}"
@@ -102,7 +92,8 @@ class Rorient::Query::Match
   end
 
   def osql
-    q = ["MATCH"] << _fields.join(".") << _ret << _limit << "/-1"
+    inject_where
+    q = ["MATCH"] << _fields.join(".") << inject_ret << _limit << "/-1"
     q.compact.flatten.join(" ")
   end
 
@@ -111,6 +102,21 @@ class Rorient::Query::Match
     @_fields, @_where, @_ret = []
     @_where_pos, @_ret_pos = 0
     results
+  end
+
+  private
+  
+  def inject_where
+    @_where.each_with_index do |filters, field_pos|
+      @_fields[field_pos] = (@_fields[field_pos].split("}")<< "where: (#{filters})}").join(", ") if filters 
+    end
+  end
+
+  def inject_ret
+    @_ret.compact.each_with_index do |rets, field_pos|
+      rets.map!{|ret| _fields[field_pos].match(/\bas:\s+\K\w*/)[0] + ".#{ret}" }
+    end
+    "RETURN " << @_ret.flatten.join(" ")
   end
 end
 
