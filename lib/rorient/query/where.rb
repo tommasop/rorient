@@ -16,12 +16,7 @@ class Rorient::Query::Where
 
   def initialize(*args, &block)
     @conditions = []
-    if block
-      self.argument = case block.arity
-                      when 0 then instance_eval(&block)
-                      else        block.call(self)
-                      end
-    end
+    block.arity < 1 ? instance_eval(&block) : block.call(self)
   end
 
   def osql
@@ -29,7 +24,6 @@ class Rorient::Query::Where
   end
 
   def method_missing(name, *args)
-    return if name =~ /argument/
     args.empty? ? @conditions << "#{name}" : @conditions << "#{name} = #{args.first}"
     self
   end
