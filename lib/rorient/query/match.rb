@@ -2,12 +2,10 @@ class Rorient::Query::Match
   include Enumerable
   include Rorient::Query::Util
 
-  attr_reader :db, :_start, :_start_where, :_fields, :_where, :_where_pos, :_ret, :_ret_pos, :_limit
+  attr_reader :db, :_fields, :_where, :_where_pos, :_ret, :_ret_pos, :_limit
 
   def initialize(db)
     @db = db 
-    @_start = nil
-    @_start_where = nil
     @_fields = []
     @_where = []
     @_where_pos = 0
@@ -17,28 +15,27 @@ class Rorient::Query::Match
     @_order = nil 
   end
 
-  def start(start, &block)
-    bark("The type must be either and Edge or a Vertex class") unless (start.ancestors & [Rorient::Vertex, Rorient::Edge]).any? if start.is_a? Class
-    @_start = "{class: #{start.name}, as: #{start.name.underscore}}" 
-    @_start_where = Rorient::Query::Where.new(&block).osql if block
-    self
+  def from(start, &block)
+    fields(nil, "", start, &block)
   end
-  alias_method :from, :start
 
   # I need to know:
-  # 1. direction: in | out | both | start
+  # 1. direction: in | out | both | nil
   # 2. v or e default "" which means in()
   # 3. an edge || vertex class 
-  # 4. a named hash of filters achieved with the ruby 2 double splat [**] operator
-  def fields(direction, v_or_e = "", type)
-    bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
+  # 4. a block for the where condition { name(:pippo).and.surname(:pluto) }
+  def fields(direction, v_or_e = "", type, &block)
+    bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction) if direction
     bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
-    field = "#{direction}#{v_or_e}()"
+    field = direction ? "#{direction}#{v_or_e}()" : ""
     field << "{class: #{type.name}, as: #{type.name.underscore}}"
     @_fields << field 
-    # for every pattern I create a nil where which
-    # can be positionally filled afterwards
-    @_where << nil
+    @_ret << nil
+    if block.given? 
+      where(&block)
+    else
+      @_where << nil
+    end
     self
   end
 
@@ -79,19 +76,24 @@ class Rorient::Query::Match
   end
 
   def where(*args, &block)
-    bark("The query can have as many wheres as its traversal levels") if _where_pos == _fields.count
+    bark("The query can have as many wheres as its traversal levels") if (_where_pos != _fields.count) || (_where_pos == 0 && _fields.count == 1) 
     @_where[@_where_pos] =  Rorient::Query::Where.new(args, &block).osql 
     @_where_pos += 1
     self
   end
 
   def ret(*args)
-    bark("The query can have as many returns as its traversal levels") if _ret_pos > _fields.count
-    p @_ret
+    bark("The query can have as many returns as its traversal levels") if _ret_pos != _fields.count
     @_ret[@_ret_pos] = args
-    p @_ret
     @_ret_pos += 1
     self
+  end
+
+  def _ret
+    @_ret.each_with_index do |rets, field_pos|
+      rets.map!{|ret| _fields[field_pos].split("as: ").last + ".#{ret}" }
+    end
+    @_ret.flatten.compact.join(" ")
   end
 
   def limit(record_number = 20)
@@ -100,7 +102,7 @@ class Rorient::Query::Match
   end
 
   def osql
-    q = ["MATCH"] << _start << _fields.join(".") << _ret << _limit << "/-1"
+    q = ["MATCH"] << _fields.join(".") << _ret << _limit << "/-1"
     q.compact.flatten.join(" ")
   end
 
