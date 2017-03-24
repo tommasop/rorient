@@ -14,12 +14,13 @@ class Rorient::Query::Match
     @_order = nil 
   end
 
-  def start(start, where: nil)
-    bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction)
-    bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
-    @_start = "{class: #{start.name}, as: #{start.name.underscore}" 
-    @_start_where = Rorient::Query::Where.new(where).osql
+  def start(start, &block)
+    bark("The type must be either and Edge or a Vertex class") unless (start.ancestors & [Rorient::Vertex, Rorient::Edge]).any? if start.is_a? Class
+    @_start = "{class: #{start.name}, as: #{start.name.underscore}}" 
+    @_start_where = Rorient::Query::Where.new(&block).osql if block
+    self
   end
+  alias_method :from, :start
 
   # I need to know:
   # 1. direction: in | out | both | start

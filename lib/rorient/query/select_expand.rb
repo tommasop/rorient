@@ -38,7 +38,7 @@ class Rorient::Query::SelectExpand
     fields(:both, v_or_e, type, args)
   end
 
-  def from(args)
+  def from(args, &block)
     bark("Subquery already initialized as current query FROM") if @subquery
     if args.is_a? Array
       @_from = "FROM [#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 

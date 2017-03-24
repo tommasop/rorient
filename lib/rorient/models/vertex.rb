@@ -14,8 +14,8 @@ module Rorient
       end
     end
 
-    def self.query(type = "select_expand")
-      @query = Rorient::Query.send(type, self.odb).from(self.name)
+    def self.query(type = "select_expand", &block)
+      @query = Rorient::Query.send(type, self.odb).from(self, &block)
     end
 
     def self.all
