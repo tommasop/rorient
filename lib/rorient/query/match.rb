@@ -31,7 +31,7 @@ class Rorient::Query::Match
     field << "{class: #{type.name}, as: #{type.name.underscore}}"
     @_fields << field 
     @_ret << nil
-    if block.given? 
+    if block
       where(&block)
     else
       @_where << nil
@@ -76,7 +76,7 @@ class Rorient::Query::Match
   end
 
   def where(*args, &block)
-    bark("The query can have as many wheres as its traversal levels") if (_where_pos != _fields.count) || (_where_pos == 0 && _fields.count == 1) 
+    bark("The query can have as many wheres as its traversal levels") if ((_where_pos != _fields.count) && (_where_pos != 0 && _fields.count != 1)) 
     @_where[@_where_pos] =  Rorient::Query::Where.new(args, &block).osql 
     @_where_pos += 1
     self
