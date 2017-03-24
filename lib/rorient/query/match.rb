@@ -106,7 +106,8 @@ class Rorient::Query::Match
 
   def execute
     results = db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
-    @_fields = []     
+    @_fields, @_where, @_ret = []
+    @_where_pos, @_ret_pos = 0
     results
   end
 end
