@@ -6,11 +6,10 @@ class Rorient::Query::Where
   ITEMS = [:column, :any, :all]
   RECORD_ATTRIBUTES = [:@this, :@rid, :@class, :@version, :@size, :@type]
   CONDITIONAL_OPERATORS = [:"=", :like, :<, :<=, :>, :>=, :"<>", :between, :is, :instanceof, :in, :contains, :containsall, 
-                 :containskey, :containsvalue, :containstext, :matches, :traverse]
+                           :containskey, :containsvalue, :containstext, :matches, :traverse]
   LOGICAL_OPERATORS = [:and, :or, :not]
   MATHEMATICAL_OPERATORS = [:+, :-, :*, :/, :%] # complex expressions can be evaluated eval("amount * 120/100 - discount")
   VARIABLES = [:$parent, :$current, :$depth, :$path, :$stack, :$history]
-  
   
   attr_reader :conditions, :operators
 
@@ -38,4 +37,3 @@ class Rorient::Query::Where
     self
   end
 end
-
