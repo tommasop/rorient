@@ -24,7 +24,17 @@ class Rorient::Query::Where
   end
 
   def method_missing(name, *args)
-    args.empty? ? @conditions << "#{name}" : @conditions << "#{name} = #{args.first}"
+    case 
+    when args.empty?; @conditions << "#{name}"
+    when args.first.nil?; @conditions << "#{name} IS NULL"
+    when args.first == true; @conditions << "#{name} IS NOT NULL"
+    when args.count > 1
+      case args.first
+      when :like; @conditions << "#{name} LIKE '%#{args.last}%'"
+      else @conditions << "#{name} IN [#{args.map{|a| "'#{a}'"}.join(",")}]"
+      end
+    end
+    # args.empty? ? @conditions << "#{name}" : @conditions << "#{name} = #{args.first}"
     self
   end
 end

@@ -8,7 +8,7 @@ class Rorient::Query::Select
     @db = db 
     @_fields = []
     @_from = nil 
-    @_where = {}
+    @_where = nil
     @_limit = nil
     @_order = nil 
   end
@@ -22,22 +22,27 @@ class Rorient::Query::Select
     @_fields.join(",")
   end
 
-  def from(*args)
+  def from(args, &block)
     if args.is_a? Array
       @_from = "FROM [#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 
     else
       @_from = "FROM #{args}"
     end
+    where(&block) if block
     self
   end
 
   def _from
-    @subquery ? @_from << @subquery.query : @_from
+    @subquery ? @_from = "FROM (" << @subquery.osql << ")" : @_from
   end
 
-  def where(*args)
-    @_where = parse_args(args) 
+  def where(*args, &block)
+    @_where  =  Rorient::Query::Where.new(args, &block).osql 
     self
+  end
+
+  def _where
+   "WHERE " << @_where
   end
 
   def limit(record_number = 20)
@@ -51,18 +56,23 @@ class Rorient::Query::Select
     self
   end
   
-  def subquery(type: "Select")
+  def subquery(type: "select")
     bark("FROM already initialized for current query") if @subquery
-    @subquery ||= "Rorient::Query::#{type}".constantize.new
+    @subquery ||= Rorient::Query.send(type, db)
   end
 
   def osql
-    @query << _fields << _from << _where << _limit << _order << "/-1"
-    @query.compact.flatten.join(" ")
+    q = ["SELECT"]
+    q << _fields << _from << _where << _limit << _order << "/-1"
+    q.compact.flatten.join(" ")
   end
 
   def execute
-    results = db.query.execute(query_text: URI.encode(osql))
+    raw.map{|i| i[:@class].constantize.new(i)}
+  end
+
+  def raw
+    results = db.query.execute(query_text: URI.encode(osql, " '%,:#()[]"))[:result]
     @_fields = []     
     results
   end

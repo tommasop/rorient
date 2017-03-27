@@ -49,8 +49,7 @@ class Rorient::Query::SelectExpand
   end
 
   def _from
-    @_from = "FROM (" << @subquery.osql << ")" if @subquery
-    @_from
+    @subquery ? @_from = "FROM (" << @subquery.osql << ")" : @_from
   end
 
  # def where(*args)
@@ -69,9 +68,9 @@ class Rorient::Query::SelectExpand
     self
   end
   
-  def subquery(type: "Select")
+  def subquery(type: "select")
     bark("FROM already initialized for current query") if @subquery
-    @subquery ||= "Rorient::Query::#{type}".constantize.new(db)
+    @subquery ||= Rorient::Query.send(type, db)
   end
 
   def osql
