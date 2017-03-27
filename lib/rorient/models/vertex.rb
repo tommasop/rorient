@@ -22,6 +22,12 @@ module Rorient
       Rorient::NodesRetriever.new(self, "V").get_all
     end
     
+    # Delete arrays of nodes
+    def self.delete(*ids)
+      odb.command.execute(command_text: URI.encode("DELETE VERTEX #{self.name} WHERE @rid IN [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]"))
+      return self
+    end
+    
     def self.outE(types = nil)
       Rorient::NodesRetriever.new(self, "E", :out, types)
     end

@@ -23,6 +23,12 @@ module Rorient
       Rorient::NodesRetriever.new(self, "", :both, types)
     end
     
+    # Delete arrays of nodes
+    def self.delete(*ids)
+      odb.command.execute(command_text: URI.encode("DELETE EDGE #{self.name} WHERE @rid IN [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]"))
+      return self
+    end
+
     # Persist the edge attributes
     def save
       features = {

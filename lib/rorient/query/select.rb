@@ -2,13 +2,12 @@ class Rorient::Query::Select
   include Enumerable
   include Rorient::Query::Util
   
-  attr_reader :db, :expand, :_fields, :_where, :_limit, :_order
+  attr_reader :db, :_fields, :_where, :_limit, :_order
 
   def initialize(db)
     @db = db 
-    @query = ["SELECT"]
     @_fields = []
-    @_from = ["FROM"]
+    @_from = nil 
     @_where = {}
     @_limit = nil
     @_order = nil 
@@ -24,8 +23,11 @@ class Rorient::Query::Select
   end
 
   def from(*args)
-    bark("Subquery already initialized as current query FROM") if @subquery
-    @_from << parse_args(args)
+    if args.is_a? Array
+      @_from = "FROM [#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 
+    else
+      @_from = "FROM #{args}"
+    end
     self
   end
 

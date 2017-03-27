@@ -1,8 +1,5 @@
 module Rorient
   class Query
-    IsAlreadySelectQuery = Class.new(StandardError) 
-    IsAlreadyTraverseQuery = Class.new(StandardError) 
-
     def self.select(db)
       Rorient::Query::Select.new(db)
     end
