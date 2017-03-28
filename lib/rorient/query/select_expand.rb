@@ -2,13 +2,14 @@ class Rorient::Query::SelectExpand
   include Enumerable
   include Rorient::Query::Util
 
-  attr_reader :db, :_fields, :_where, :_limit, :_order
+  attr_reader :db, :_fields, :_where, :_where_pos, :_limit, :_order
 
   def initialize(db)
     @db = db 
     @_fields = []
     @_from = nil 
-    @_where = {}
+    @_where = []
+    @_where_pos = 0
     @_limit = nil
     @_order = nil 
   end
@@ -18,24 +19,51 @@ class Rorient::Query::SelectExpand
   # 2. v or e default "" which means in()
   # 3. an edge || vertex class 
   # 4. a named hash of filters achieved with the ruby 2 double splat [**] operator
-  def fields(direction = nil, v_or_e = "", type = nil, **args)
+  def fields(direction, v_or_e = "", type = nil, &block)
+    bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction) if direction
+    bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any? if type
     field = "#{direction}#{v_or_e}"
     type ? field << "('#{type}')" : field << "()"
-    field << "#{args.map{|k,v| "[#{k}=#{v}]"}.join(",")}" if !args.empty?
     @_fields << field 
+    @_where << nil
+    where(&block) if block
     self
   end
 
-  def in(v_or_e = "", type = nil, **args)
-    fields(:in, v_or_e, type, args)
+  def in(type = nil, &block)
+    fields(:in, "", type, &block)
   end
   
-  def out(v_or_e = "", type = nil, **args)
-    fields(:out, v_or_e, type, args)
+  def inE(type = nil, &block)
+    fields(:in, "E", type, &block)
+  end
+  
+  def inV(type = nil, &block)
+    fields(:in, "V", type, &block)
+  end
+  
+  def out(type = nil, &block)
+    fields(:out, "", type, &block)
+  end
+  
+  def outE(type = nil, &block)
+    fields(:out, "E", type, &block)
   end
 
-  def both(v_or_e = "", type = nil, **args)
-    fields(:both, v_or_e, type, args)
+  def outV(type = nil, &block)
+    fields(:out, "V", type, &block)
+  end
+
+  def both(type = nil, &block)
+    fields(:both, "", type, &block)
+  end
+  
+  def bothE(type = nil, &block)
+    fields(:both, "E", type, &block)
+  end
+
+  def bothV(type = nil, &block)
+    fields(:both, "V", type, &block)
   end
 
   def from(args, &block)
@@ -52,10 +80,12 @@ class Rorient::Query::SelectExpand
     @subquery ? @_from = "FROM (" << @subquery.osql << ")" : @_from
   end
 
- # def where(*args)
- #   @_where = parse_args(args) 
- #   self
- # end
+  def where(*args, &block)
+    bark("The query can have as many wheres as its traversal levels") if _where_pos == _fields.count
+    @_where[@_where_pos] =  Rorient::Query::Where.new(args, &block).osql 
+    @_where_pos += 1
+    self
+  end
 
   def limit(record_number = 20)
     @_limit = "LIMIT #{record_number}"
@@ -74,6 +104,7 @@ class Rorient::Query::SelectExpand
   end
 
   def osql
+    inject_where
     q = ["SELECT EXPAND("] << _fields.join(".") << ")" << _from << _limit << _order << "/-1"
     q.compact.flatten.join(" ")
   end
@@ -86,6 +117,14 @@ class Rorient::Query::SelectExpand
     results = db.query.execute(query_text: URI.encode(osql, " ,:#()[]"))[:result]
     @_fields = []     
     results
+  end
+  
+  private
+  
+  def inject_where
+    @_where.each_with_index do |filters, field_pos|
+      filters ? @_fields[field_pos] << "[ #{filters} ]" : @_fields[field_pos] 
+    end
   end
 end
 

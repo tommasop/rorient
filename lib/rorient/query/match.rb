@@ -35,39 +35,39 @@ class Rorient::Query::Match
     self
   end
 
-  def in(type)
+  def in(type = nil)
     fields(:in, "", type)
   end
   
-  def inE(type)
+  def inE(type = nil)
     fields(:in, "E", type)
   end
   
-  def inV(type)
+  def inV(type = nil)
     fields(:in, "V", type)
   end
   
-  def out(type)
+  def out(type = nil)
     fields(:out, "", type)
   end
   
-  def outE(type)
+  def outE(type = nil)
     fields(:out, "E", type)
   end
 
-  def outV(type)
+  def outV(type = nil)
     fields(:out, "V", type)
   end
 
-  def both(type)
+  def both(type = nil)
     fields(:both, "", type)
   end
   
-  def bothE(type)
+  def bothE(type = nil)
     fields(:both, "E", type)
   end
 
-  def bothV(type)
+  def bothV(type = nil)
     fields(:both, "V", type)
   end
 
