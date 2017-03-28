@@ -32,6 +32,7 @@ class Rorient::Query::Where
       when :like; @conditions << "#{name} LIKE '%#{args.last}%'"
       else @conditions << "#{name} IN [#{args.map{|a| "'#{a}'"}.join(",")}]"
       end
+    else @conditions << "#{name} = #{args.first}"
     end
     # args.empty? ? @conditions << "#{name}" : @conditions << "#{name} = #{args.first}"
     self
