@@ -280,4 +280,16 @@ module Rorient
       return result
     end
   end
+  #   class Comment < Rorient::Vertex(DBCLIENT)
+  #   this sets the instance variable @orientdb to the
+  #   OrientDB Database 
+  def self.Base(source)
+    if source.is_a?(Rorient::Client)
+      c = Class.new(Rorient::Base)
+      c.odb = source
+      c
+    else
+      raise(Error, "No OrientDB connection associated with #{self}")
+    end
+  end
 end
