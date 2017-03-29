@@ -81,3 +81,4 @@ end
 # self.Model method!
 Rorient::Vertex
 Rorient::Edge
+Rorient::Base

@@ -36,7 +36,6 @@ class Rorient::Query::Where
       param = [String, Symbol].include?(args.first.class) ? "'#{args.first}'" : args.first 
       @conditions << "#{name} = #{param}"
     end
-    # args.empty? ? @conditions << "#{name}" : @conditions << "#{name} = #{args.first}"
     self
   end
 end
