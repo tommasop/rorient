@@ -19,7 +19,9 @@ class Rorient::Query::Where
   end
 
   def osql
-    @conditions.flatten.compact.join(" ")
+    results = @conditions.flatten.compact.join(" ")
+    @conditions = []
+    results
   end
 
   def method_missing(name, *args)
