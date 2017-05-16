@@ -2,7 +2,7 @@ class Rorient::Query::Insert
   include Enumerable
   include Rorient::Query::Util
   
-  attr_reader :db, :_into, :_where, :_set
+  attr_reader :db, :_into, :_where, :_set, :_from
 
   def initialize(db)
     @db = db 
@@ -17,16 +17,13 @@ class Rorient::Query::Insert
     self
   end
 
-  def from(type: "select")
+  def from(from_select)
     bark("FROM already initialized for current query") if @_from
-    @subquery ||= Rorient::Query.send(type, db)
+    bark("FROM must be a select") unless from_select.is_a? Rorient::Query::Select
+    @_from = "FROM (" << from_select.osql(false) << ")" 
     self
   end
 
-  def _from
-    @subquery ? @_from = "FROM (" << @subquery.osql << ")" : @_from
-  end
-  
   def set(args = nil, &block)
     if block
       block.arity < 1 ? instance_eval(&block) : block.call(self)

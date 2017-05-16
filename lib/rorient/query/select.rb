@@ -42,7 +42,7 @@ class Rorient::Query::Select
   end
 
   def _where
-   "WHERE " << @_where
+   @_where ? "WHERE " << @_where : @_where
   end
 
   def limit(record_number = 20)
