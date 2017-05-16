@@ -68,7 +68,6 @@ class Rorient::Query::Insert
 
   def method_missing(name, *args)
     if args.first.is_a? Rorient::Query::Select
-      p "its a QUERYYYYY"
       param = "(#{args.first.osql(false)})"
     else
       param = [String, Symbol].include?(args.first.class) ? "'#{args.first}'" : args.first 
