@@ -41,11 +41,6 @@ class Rorient::Query::Insert
     end
   end
 
-  def subquery(type: "select")
-    bark("SUBQUERY already initialized for current query") if @subquery
-    @subquery ||= Rorient::Query.send(type, db)
-  end
-
   def osql
     q = ["INSERT"]
     q << _into  << _set << _from
@@ -59,7 +54,8 @@ class Rorient::Query::Insert
 
   def raw
     results = db.command.execute(command_text: URI.encode(osql, " '%,:#()[]"))[:result]
-    @_fields = []     
+    @_set = []     
+    @_from = nil
     results
   end
 
