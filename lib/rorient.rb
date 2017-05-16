@@ -42,6 +42,7 @@ module Rorient
   Query.autoload :Quoting, "rorient/query/quoting"
   Query.autoload :Traverse, "rorient/query/traverse"
   Query.autoload :Select, "rorient/query/select"
+  Query.autoload :Insert, "rorient/query/insert"
   Query.autoload :SelectExpand, "rorient/query/select_expand"
   Query.autoload :Match, "rorient/query/match"
   Query.autoload :Where, "rorient/query/where"

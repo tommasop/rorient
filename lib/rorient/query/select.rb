@@ -61,9 +61,10 @@ class Rorient::Query::Select
     @subquery ||= Rorient::Query.send(type, db)
   end
 
-  def osql
+  def osql(all = true)
     q = ["SELECT"]
-    q << _fields << _from << _where << _limit << _order << "/-1"
+    q << _fields << _from << _where << _limit << _order
+    q << "/-1" if all
     q.compact.flatten.join(" ")
   end
 
