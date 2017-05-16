@@ -27,13 +27,21 @@ class Rorient::Query::Insert
     @subquery ? @_from = "FROM (" << @subquery.osql << ")" : @_from
   end
   
-  def set(args, &block)
+  def set(args = nil, &block)
     if block
       block.arity < 1 ? instance_eval(&block) : block.call(self)
     else
       @_set = "CONTENT #{Oj.dump(args, mode: :compat)}"
     end
     self
+  end
+
+  def _set
+    if @_set.is_a? String
+      @_set
+    else
+      ["SET"] << @_set
+    end
   end
 
   def subquery(type: "select")
@@ -59,7 +67,12 @@ class Rorient::Query::Insert
   end
 
   def method_missing(name, *args)
-    param = [String, Symbol].include?(args.first.class) ? "'#{args.first}'" : args.first 
+    if args.first.is_a? Rorient::Query::Select
+      p "its a QUERYYYYY"
+      param = "(#{args.first.osql(false)})"
+    else
+      param = [String, Symbol].include?(args.first.class) ? "'#{args.first}'" : args.first 
+    end
     @_set << "#{name} = #{param}"
     self
   end
