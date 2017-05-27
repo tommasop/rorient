@@ -2,18 +2,21 @@ class Rorient::Query::Create
   include Enumerable
   include Rorient::Query::Util
   
-  attr_reader :db, :type, :_where, :_set, :_from
+  attr_reader :db, :type,:_o_class, :_set, :_from
 
   def initialize(db, type = "VERTEX")
     @db = db 
+    bark("Type must be either VERTEX or EDGE") if !["VERTEX", "EDGE"].include?(type)
     @type = type
-    @_fields = []
+    @o_class = nil
     @_from = nil 
     @_set = []
   end
 
-  def into(args)
-    @_into = "INTO #{args}"
+  def o_class(args)
+    bark("The argument must be an OrientDB class") unless args.is_a?(Class)
+    bark("The OrientDB class must be either and Edge or a Vertex") unless (args.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
+    @_o_class = "#{args}"
     self
   end
 
@@ -43,7 +46,7 @@ class Rorient::Query::Create
 
   def osql
     q = ["CREATE"]
-    q << type  << _set << _from
+    q << type << _o_class  << _set << _from
     q.compact.flatten.join(" ")
   end
 
