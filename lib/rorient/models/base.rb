@@ -116,6 +116,7 @@ module Rorient
         queries_with_roles << user_role_name.equal?("admin") ? "UPDATE #{var_for_query} ADD _allow = [#{user_role.map{|ur| ur }.join(",")}]" : "UPDATE #{var_for_query} ADD _allowRead = [#{user_role.map{|ur| ur }.join(",")}], _allowUpdate = [#{user_role.map{|ur| ur }.join(",")}]" 
         queries_with_roles << "RETURN #{var_for_query}"
       end
+      p queries_with_roles
       results = odb.batch.execute(Rorient::Batch.new(statements: queries_with_roles.flatten).generate_hash)
       results = results[:result].first if results.key?(:result)
       results
