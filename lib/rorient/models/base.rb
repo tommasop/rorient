@@ -246,6 +246,19 @@ module Rorient
       }
     end
 
+    def batch_with_allows(user_role_name, user_role, *queries)
+      queries_with_roles = []
+      queries.each_with_index do | query, i |
+        var_for_query = "$sql_var#{i}"
+        queries_with_roles << "let #{var_for_query} = #{query}"
+        queries_with_roles << user_role_name.equal?("admin") ? "UPDATE #{var_for_query} ADD _allow = [#{user_role.map{|ur| ur }.join(",")}]" : "UPDATE #{var_for_query} ADD _allowRead = [#{user_role.map{|ur| ur }.join(",")}], _allowUpdate = [#{user_role.map{|ur| ur }.join(",")}]" 
+        queries_with_roles << "RETURN #{var_for_query}"
+      end
+      results = odb.batch.execute(Rorient::Batch.new(statements: queries_with_roles.flatten).generate_hash)
+      results = results[:result].first if results.key?(:result)
+      results
+    end
+
     protected
     
     def self.attributes
