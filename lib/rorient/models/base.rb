@@ -108,13 +108,13 @@ module Rorient
       new(atts).save
     end
 
-    def self.batch_with_allows(user_role_name, user_role, *queries)
+    def self.batch_with_allows(all_roles, user_role_name, user_role, *queries)
       queries_with_roles = []
+      user_role << all_roles.delete(user_role_name)
       queries.each_with_index do | query, i |
         var_for_query = "$sql_var#{i}"
         queries_with_roles << "let #{var_for_query} = #{query}"
-        perm_query = user_role_name.equal?("admin") ? "UPDATE #{var_for_query} ADD _allow = [#{user_role.map{|ur| ur }.join(",")}]" : "UPDATE #{var_for_query} ADD _allowRead = [#{user_role.map{|ur| ur }.join(",")}], _allowUpdate = [#{user_role.map{|ur| ur }.join(",")}]" 
-        queries_with_roles << perm_query 
+        queries_with_roles << "UPDATE #{var_for_query} ADD _allow = [#{user_role.map{|ur| ur }.join(",")}]  _allowRead = [#{all_roles.values.join(",")}], _allowUpdate = [#{all_roles["writer"]}]" 
         queries_with_roles << "RETURN #{var_for_query}"
       end
       p queries_with_roles
