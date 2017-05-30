@@ -114,7 +114,7 @@ module Rorient
       queries.each_with_index do | query, i |
         var_for_query = "$sql_var#{i}"
         queries_with_roles << "let #{var_for_query} = #{query}"
-        queries_with_roles << "UPDATE #{var_for_query} ADD _allow = [#{user_role.map{|ur| ur }.join(",")}]  _allowRead = [#{all_roles.values.join(",")}], _allowUpdate = [#{all_roles["writer"]}]" 
+        queries_with_roles << "UPDATE #{var_for_query} ADD _allow = [#{user_role.map{|ur| ur }.join(",")}], _allowRead = [#{all_roles.values.join(",")}], _allowUpdate = [#{all_roles["writer"]}]" 
         queries_with_roles << "RETURN #{var_for_query}"
       end
       p queries_with_roles
