@@ -109,12 +109,13 @@ module Rorient
     end
 
     def self.batch_with_allows(roles, *queries)
+      p roles
       allow_rids = [roles[:rid], roles[:all].delete("admin")]
       queries_with_roles = []
       queries.each_with_index do | query, i |
         var_for_query = "$sql_var#{i}"
         queries_with_roles << "let #{var_for_query} = #{query}"
-        queries_with_roles << "UPDATE #{var_for_query} ADD _allow = [#{allow_rids.map{|ur| ur }.join(",")}], _allowRead = [#{roles[:all].values.join(",")}], _allowUpdate = [#{roles[:all]["writer"]}]" 
+        queries_with_roles << "UPDATE #{var_for_query} ADD _allow = [#{allow_rids.compact.map{|ur| ur }.join(",")}], _allowRead = [#{roles[:all].values.join(",")}], _allowUpdate = [#{roles[:all]["writer"]}]" 
         queries_with_roles << "RETURN #{var_for_query}"
       end
       p queries_with_roles
