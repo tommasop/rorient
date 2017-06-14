@@ -1,0 +1,19 @@
+module Rorient
+  class Query
+    def self.select(db)
+      Rorient::Query::Select.new(db)
+    end
+
+    def self.select_expand(db)
+      Rorient::Query::SelectExpand.new(db)
+    end
+
+    def self.traverse(db)
+      Rorient::Query::Traverse.new(db)
+    end
+    
+    def self.match(db)
+      Rorient::Query::Match.new(db)
+    end
+  end
+end

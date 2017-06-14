@@ -1,11 +1,12 @@
 # Rorient
 
-Rorient is a ruby gem thought as a lightweight ORM on top of OrientDB HTTP API.
+Rorient is a ruby gem thought as a lightweight Graph ORM on top of OrientDB HTTP API.
 
 It has:
 
 - Migrations (loosely based on sql_migrations)
 - ActiveRecord like methods (loosely based on OHM)
+- Easy graph traversal methods
 - Sequel like db instantiation and model data declaration
 
 It is being actively developed thanks to [Makeplan](http://www.makeplan.it) 
@@ -13,23 +14,30 @@ It is being actively developed thanks to [Makeplan](http://www.makeplan.it)
 A simple Rorient connection is like this:
 
 ```
-DB = Rorient.connect(server: '123.144.122.444:2480', user: 'myuser', password: 'mypassword', db_name: 'mydb')
+ODB = Rorient.connect(server: '123.144.122.444:2480', user: 'myuser', password: 'mypassword', db_name: 'mydb')
 ```
 
-Then you can have models inheriting from `Rorient::Model` this way:
+Then you can have vertexes or edges inheriting from `Rorient::Base` this way:
 
 ```
-class User < Rorient::Model(DB)
+class User < Rorient::Vertex(ODB)
 end
+
+class Car < Rorient::Vertex(ODB)
+end
+
+class Has < Rorient::Edge(ODB)
+end
+
 ```
 
-And graph relations defined with activerecord style:
+Graph relations can be defined with helpers:
 
 ```
 # One model OUT graph relation
-has_many "friends", vertex: "User", edge: "connections"
+named_vertexes :cars, "Has", :out
 # Another model IN graph relation
-belongs_to "friend", vertex: "User", edge: "connections"
+named_vertexes :owner, "Has", :in
 ```
 
 About migrations you can have the usual `db/migrations` directory but need
@@ -81,3 +89,75 @@ DROP CLASS OrientedConnection UNSAFE;
 --end-rollback;
 ```
 
+## ONE2MANY, ONE2ONE, MANY2ONE relations
+
+Apart from graph direction you can also force the relationship between graph nodes
+to mimick relational ones.
+
+If we conventionally say that FROM = out and TO = in then we can shape a:
+
+1. ONE2MANY --> CREATE INDEX MyEdgeClass.in ON MyEdgeClass(in) UNIQUE
+2. MANY2ONE --> CREATE INDEX MyEdgeClass.out ON MyEdgeClass(out) UNIQUE
+3. ONE2ONE --> CREATE INDEX MyEdgeClass.out ON MyEdgeClass(out) UNIQUE; CREATE INDEX MyEdgeClass.in ON MyEdgeClass(in) UNIQUE
+
+## Graph traversal methods
+
+The library has methods that mimicks the OrientDB graph query methods.
+
+### Vertexes
+
+```
+User.out.to_a # returns all out vertexes from User
+User.in.to_a # returns all in vertexes from User
+User.both.to_a # returns all in and out vertexes from User
+User.outE.to_a # returns all out edges from User
+User.inE.to_a # returns all in edges from User
+
+u = User.first
+
+u.out.to_a # returns all out vertexes from user
+u.in.to_a # returns all in vertexes from user
+u.both.to_a # returns all in and out vertexes from user
+u.outE.to_a # returns all out edges from user
+u.inE.to_a # returns all in edges from user
+u.bothE.to_a # returns all in and out edges from user
+u.traverseO.to_a # returns all the out vertexes in the graph starting from node u
+u.traverseI.to_a # returns all the in vertexes in the graph starting from node u
+```
+
+Each method can be given one or more edge classes as a filter for the nodes to be retrieved
+
+```
+u.out("Has").to_a # returns all Has out vertexes from user
+u.out("Has", "Friends").to_a
+```
+
+Each edge class can be given one or more fields on which to filter
+
+```
+User.out("Has" => {name: "George", surname: "White"}).to_a 
+u.out("Has" => {name: "George", surname: "White"}).to_a 
+User.out("Has" => {name: "George", surname: "White"}, "Friends" => {job: "doctor"}).to_a 
+u.out("Has" => {name: "George", surname: "White"}, "Friends" => {job: "doctor"}).to_a 
+```
+
+Specifying the traversal edges results in a performance boost.
+
+The traverse methods can receive two other arguments:
+
+1. depth: sets the maximum traversal depth (default is all the graph)
+2. strategy: sets the strategy (default is DEPTH_FIRST, can be changed to BREADTH_FIRST)
+
+```
+u.traverseO("Has", 2, "BREADTH_FIRST")
+```
+
+### Edges
+
+```
+h = Has.first
+
+h.outV("Car").to_a
+h.inV("User").to_a
+h.bothV.to_a
+```

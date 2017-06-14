@@ -1,7 +1,11 @@
 require "faraday"
+require "uri"
 
 module Rorient
   class Client
+    include Rorient::MetaQueries
+    include Rorient::GraphQueries
+
     attr_reader :db
 
     def initialize(server:, user:, password:, scope: nil)
@@ -31,18 +35,6 @@ module Rorient
       }
     end
 
-    def table_exists?(table_name)
-      !oclass.find(class_name: table_name).nil?
-    end
-
-    def create_table(table_name)
-      oclass.create(class_name: table_name)
-    end
-    
-    def delete_table(table_name)
-      oclass.delete(class_name: table_name)
-    end
-
     def method_missing(name, *args, &block)
       if self.class.resources.keys.include?(name)
         resources[name] ||= self.class.resources[name].new(connection: connection, scope: @scope)
@@ -60,7 +52,7 @@ module Rorient
 
     def connection_options
       {
-        url: @server,
+        url: @server.dup.force_encoding(Encoding::BINARY),
         headers: {
           content_type: "application/json",
           content_length: "0", 

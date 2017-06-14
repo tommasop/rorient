@@ -13,6 +13,7 @@ module Rorient
         @file = file
 
         DELEGATED.each do |method|
+          # instance_variable_set("@#{method}", DateTime.parse(file.send(method).to_s).iso8601) if method == :datetime
           instance_variable_set("@#{method}", file.send(method))
         end
       end
@@ -24,7 +25,7 @@ module Rorient
         driver = @database.driver
         puts driver
         begin
-          puts Rorient::Batch.new(statements: statements(@type)).generate_hash
+          # puts Rorient::Batch.new(statements: statements(@type)).generate_hash
           driver.batch.execute(Rorient::Batch.new(statements: statements(@type)).generate_hash)
         rescue
           puts "[-] Error while executing #{@type} #{@name} !"
@@ -116,7 +117,7 @@ module Rorient
         case @type 
         when "migration"
           puts "[+] Migrating history table"
-          @database.driver.document.create("@class": history, time: @datetime, name: @name, type: @type, executed: Time.now.to_s)
+          @database.driver.document.create("@class": history, time: @datetime, name: @name, type: @type, executed: Time.now.utc.iso8601(3))
         when "rollback"
           puts "[+] Rolling back history table"
           migration_record = @database.driver.query.execute(query_text: URI.encode("SELECT FROM #{history} WHERE type = 'migration' AND time = #{@datetime.to_s} ORDER BY time DESC LIMIT 1"))[:result].first

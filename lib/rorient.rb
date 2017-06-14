@@ -11,12 +11,18 @@ Oj.default_options = {:symbol_keys => true}
 module Rorient
   autoload :Client, "rorient/client"
   
-  # Base Model
-  autoload :Rid, "rorient/models/rid"
-  autoload :Batch, "rorient/models/batch"
-  autoload :Model, "rorient/models/model"
+  # Utils to deal with OrientDB rids and batches
+  autoload :Rid, "rorient/utils/rid"
+  autoload :Batch, "rorient/utils/batch"
+  autoload :Format, "rorient/utils/format"
 
-  # Resources
+  # Data modeling classes
+  autoload :Base, "rorient/models/base"
+  autoload :Vertex, "rorient/models/vertex"
+  autoload :NodesRetriever, "rorient/models/nodes_retriever"
+  autoload :Edge, "rorient/models/edge"
+
+  # OrientDB HTTP API Endpoints
   #autoload :Server, "rorient/resources/server"
   autoload :DocumentResource, "rorient/resources/document_resource"
   autoload :OClassResource, "rorient/resources/oclass_resource"
@@ -25,7 +31,25 @@ module Rorient
   autoload :CommandResource, "rorient/resources/command_resource"
   autoload :BatchResource, "rorient/resources/batch_resource"
 
-  # Utils
+  # client direct queries
+  autoload :MetaQueries, "rorient/query/meta_queries"
+  autoload :GraphQueries, "rorient/query/graph_queries"
+
+  # query maker
+  autoload :Query, "rorient/query/query"
+  Query.autoload :Error, "rorient/query/error"
+  Query.autoload :Util, "rorient/query/util"
+  Query.autoload :Quoting, "rorient/query/quoting"
+  Query.autoload :Traverse, "rorient/query/traverse"
+  Query.autoload :Select, "rorient/query/select"
+  Query.autoload :Insert, "rorient/query/insert"
+  Query.autoload :Create, "rorient/query/create"
+  Query.autoload :Update, "rorient/query/update"
+  Query.autoload :SelectExpand, "rorient/query/select_expand"
+  Query.autoload :Match, "rorient/query/match"
+  Query.autoload :Where, "rorient/query/where"
+
+  # HTTP API Class to deal with OrientDB errors
   autoload :ErrorHandlingResourceable, "rorient/error_handling_resourceable"
 
   # Migrations
@@ -36,6 +60,7 @@ module Rorient
   Error = Class.new(StandardError)
   FailedCreate = Class.new(Rorient::Error)
   FailedUpdate = Class.new(Rorient::Error)
+  Query::Error = Class.new(Rorient::Error)
 
   class RateLimitReached < Rorient::Error
     attr_accessor :reset_at
@@ -57,4 +82,6 @@ end
 
 # need to call this or it will not find it in the
 # self.Model method!
-Rorient::Model
+Rorient::Vertex
+Rorient::Edge
+Rorient::Base

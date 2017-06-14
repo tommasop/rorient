@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Rorient::VERSION
   spec.authors       = ["Tommaso Patrizi"]
   spec.email         = ["tpatrizi@makeplan.it"]
-  spec.summary       = %q{Rorient: Ruby OrientDB HTTP Client}
+  spec.summary       = %q{Rorient: Ruby OrientDB Graph HTTP Client}
   spec.description   = %q{Rorient è una libreria ruby per OrientDB}
   spec.homepage      = ""
   spec.license       = "MIT"
