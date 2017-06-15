@@ -4,6 +4,23 @@ require "oj"
 require "active_support/inflector"
 require "active_support/core_ext/object/blank"
 require "securerandom"
+require "loga"
+
+# Loga initialization based on previous
+# configuration if existing or rescue error
+# to provide new configuration
+begin 
+  Loga.configuration.service_name = "RORIENT"
+  Loga.logger.formatter = Loga.configuration.send(:assign_formatter)
+rescue Loga::ConfigurationError
+  Loga.configure(
+    filter_parameters: [:password],
+    level: ENV["LOG_LEVEL"] || "DEBUG",
+    format: :gelf,
+    service_name: "RORIENT",
+    tags: [:uuid]
+  )
+end
 
 # Always parse string keys into symbols
 Oj.default_options = {:symbol_keys => true}

@@ -1,53 +1,50 @@
 PATH
   remote: .
   specs:
-    rorient (0.1.0)
+    rorient (0.5.0)
       activesupport
       faraday (~> 0.9.1)
-      faraday_connection_pool
       resource_kit (~> 0.1.4)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.2.6)
+    activesupport (5.1.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
-      json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.3.8)
-    connection_pool (2.2.0)
+    addressable (2.5.1)
+      public_suffix (~> 2.0, >= 2.0.2)
+    concurrent-ruby (1.0.5)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
-    faraday_connection_pool (0.0.1)
-      connection_pool (~> 2.1)
-      faraday (>= 0.9.1)
-    i18n (0.7.0)
-    json (1.8.3)
-    minitest (5.9.0)
+    i18n (0.8.4)
+    json (2.1.0)
+    minitest (5.10.2)
     multipart-post (2.0.0)
+    public_suffix (2.0.5)
     purdytest (2.0.0)
       minitest (~> 5.5)
-    rack (1.6.4)
+    rack (2.0.3)
     rack-minitest (0.0.10)
       json
       minitest (~> 5.0)
       rack-test
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (11.2.2)
-    resource_kit (0.1.5)
-      addressable (~> 2.3.6)
-    thread_safe (0.3.5)
-    tzinfo (1.2.2)
+    rake (12.0.0)
+    resource_kit (0.1.6)
+      addressable (>= 2.3.6, < 3.0.0)
+    thread_safe (0.3.6)
+    tzinfo (1.2.3)
       thread_safe (~> 0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.11.0)
+  bundler
   minitest
   purdytest
   rack-minitest
@@ -55,4 +52,4 @@ DEPENDENCIES
   rorient!
 
 BUNDLED WITH
-   1.11.2
+   1.15.1
