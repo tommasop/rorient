@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "faraday", '~> 0.9.1'
   spec.add_dependency "activesupport"
   spec.add_dependency "loga"
+  spec.add_dependency "oj"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"

@@ -24,6 +24,10 @@ module Rorient
       end
     end
 
+    def disconnect
+
+    end
+
     def self.resources
       {
         document: DocumentResource,
