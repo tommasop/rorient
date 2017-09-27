@@ -1,3 +1,5 @@
+# TODO: review because not working probably not
+# useful use MATCH instead
 class Rorient::Query::Traverse
   include Enumerable
   include Rorient::Query::Util

@@ -71,7 +71,7 @@ class Rorient::Query::SelectExpand
     if args.is_a? Array
       @_from = "FROM [#{args.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]" 
     else
-      @_from = "FROM #{args}"
+      @_from = "FROM #{args.name.demodulize}"
     end
     self
   end

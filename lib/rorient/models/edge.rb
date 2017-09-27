@@ -25,14 +25,14 @@ module Rorient
     
     # Delete arrays of nodes
     def self.delete(*ids)
-      odb.command.execute(command_text: URI.encode("DELETE EDGE #{self.name} WHERE @rid IN [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]"))
+      odb.command.execute(command_text: URI.encode("DELETE EDGE #{self.name.demodulize} WHERE @rid IN [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]"))
       return self
     end
 
     # Persist the edge attributes
     def save
       features = {
-        "@class" => node.name
+        "@class" => node.name.demodulize
       }
       
       # We need to update
@@ -42,7 +42,7 @@ module Rorient
         @version += 1
       # we need to create
       else
-        @rid = odb.command.execute(command_text: URI.encode("CREATE EDGE #{node.name} FROM #{attributes.delete(:out)} TO #{attributes.delete(:in)} CONTENT #{Oj.dump(attributes, mode: :compat)}"))[:result].first[:@rid]
+        @rid = odb.command.execute(command_text: URI.encode("CREATE EDGE #{node.name.demodulize} FROM #{attributes.delete(:out)} TO #{attributes.delete(:in)} CONTENT #{Oj.dump(attributes, mode: :compat)}"))[:result].first[:@rid]
         @version = 0
       end
 

@@ -13,7 +13,7 @@ class Rorient::Query::Insert
   end
 
   def into(args)
-    @_into = "INTO #{args}"
+    @_into = "INTO #{args.name.demodulize}"
     self
   end
 

@@ -7,7 +7,7 @@ class Rorient::Query::Update
   def initialize(db, oclass)
     @db = db 
     @_set = []
-    @_from = oclass 
+    @_from = oclass.name.demodulize 
     @_where = nil
     @_limit = nil
     @_upsert = nil 
