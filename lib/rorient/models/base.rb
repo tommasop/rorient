@@ -55,7 +55,7 @@ module Rorient
     
     # Attributes from object schema if any
     def self.show_attributes
-      attributes = odb.get_attributes(self.name.demodulize)
+      attributes = odb.get_attributes(self.name)
       attributes.each do |attr|
         attribute attr[:name].to_sym
       end
@@ -96,11 +96,11 @@ module Rorient
     end
     
     def self.first
-      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name.demodulize} order by @rid/1"))[:result].first || {})
+      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid/1"))[:result].first || {})
     end
     
     def self.last
-      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name.demodulize} order by @rid desc/1"))[:result].first || {})
+      self.new(odb.query.execute(query_text: URI.encode("SELECT FROM #{self.name} order by @rid desc/1"))[:result].first || {})
     end
 
     # Syntactic sugar for Node.new(atts).save
@@ -189,7 +189,7 @@ module Rorient
     #                 |    u.get(:name) == "B"
     #
     def get(att)
-      @attributes[att] = odb.query.execute(query_text: URI.encode("SELECT #{att} FROM #{self.class.name.demodulize} WHERE @rid = #{rid}"))[:result][att]
+      @attributes[att] = odb.query.execute(query_text: URI.encode("SELECT #{att} FROM #{self.class.to_s} WHERE @rid = #{rid}"))[:result][att]
     end
     
     # Returns +true+ if the node is not persisted. Otherwise, returns +false+.
@@ -214,7 +214,7 @@ module Rorient
     # Persist the node attributes
     def save
       features = {
-        "@class" => node.name.demodulize
+        "@class" => node.name
       }
       
       # We need to update

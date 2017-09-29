@@ -5,7 +5,7 @@ module Rorient
     attr_reader :from, :odb, :v_or_e, :direction, :o_classes
 
     def initialize(from, v_or_e = "V", direction = :both, o_classes = nil)
-      @from = from.is_a?(Class) ? from.name.demodulize : from.rid
+      @from = from.is_a?(Class) ? from.name : from.rid
       @odb = from.is_a?(Class) ? from.odb : from.class.odb
       @v_or_e = v_or_e
       @direction = direction

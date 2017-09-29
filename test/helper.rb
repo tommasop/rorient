@@ -33,8 +33,5 @@ class IntegrationDrawing < Rorient::Edge(ODB); end
 class IntegrationLayers < Rorient::Edge(ODB); end
 class IntegrationEntities < Rorient::Edge(ODB); end
 
-module Test
-  class Drawing < Rorient::Vertex(ODB) ; end
-end
 
 

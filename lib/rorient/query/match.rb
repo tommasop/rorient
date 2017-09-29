@@ -28,7 +28,7 @@ class Rorient::Query::Match
     bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction) if direction
     bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
     field = direction ? "#{direction}#{v_or_e}()" : ""
-    field << "{class: #{type.name.demodulize}, as: #{type.name.demodulize.underscore}}"
+    field << "{class: #{type.name}, as: #{type.name.underscore}}"
     @_fields << field 
     @_ret << nil &&  @_where << nil
     where(&block) if block

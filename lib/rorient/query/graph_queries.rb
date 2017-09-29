@@ -13,7 +13,7 @@ module Rorient
     
     # Method to check class existence and class being Edge
     def is_edge?(class_name)
-      query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.camelize.demodulize}'")).present?
+      query.execute(query_text: URI.encode("SELECT FROM E WHERE @class = '#{class_name.camelize}'")).present?
     end
   end
 end

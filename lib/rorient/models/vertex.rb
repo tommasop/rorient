@@ -24,7 +24,7 @@ module Rorient
     
     # Delete arrays of nodes
     def self.delete(*ids)
-      odb.command.execute(command_text: URI.encode("DELETE VERTEX #{self.name.demodulize} WHERE @rid IN [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]"))
+      odb.command.execute(command_text: URI.encode("DELETE VERTEX #{self.name} WHERE @rid IN [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]"))
       return self
     end
     
@@ -63,7 +63,7 @@ module Rorient
     # Persist the vertex attributes
     def save
       features = {
-        "@class" => node.name.demodulize
+        "@class" => node.name
       }
       
       # We need to update
@@ -73,7 +73,7 @@ module Rorient
         @version += 1
       # we need to create
       else
-        @rid = odb.command.execute(command_text: URI.encode_www_form_component("CREATE VERTEX #{node.name.demodulize} CONTENT #{Oj.dump(attributes, mode: :compat)}").gsub("+", "%20"))[:result].first[:@rid]
+        @rid = odb.command.execute(command_text: URI.encode_www_form_component("CREATE VERTEX #{node.name} CONTENT #{Oj.dump(attributes, mode: :compat)}").gsub("+", "%20"))[:result].first[:@rid]
         @version = 0
       end
 
