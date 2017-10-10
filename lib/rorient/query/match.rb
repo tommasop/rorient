@@ -99,7 +99,7 @@ class Rorient::Query::Match
 
   def execute
     results = raw.map!{|i| i[:@class].constantize.new(i)}
-    # results.size > 1 ? results : results.first
+    results.size > 1 ? results : results.first
   end
 
   def raw

@@ -34,6 +34,9 @@ class Rorient::Query::Where
       end
     else 
       param = [String, Symbol].include?(args.first.class) ? "'#{args.first}'" : args.first 
+      if RECORD_ATTRIBUTES.include?(:"@#{name}")   
+        name = "@#{name}"
+      end
       @conditions << "#{name} = #{param}"
     end
     self
