@@ -92,8 +92,10 @@ class Rorient::Query::Match
   end
 
   def osql
+    p @_fields
     inject_where
-    q = ["MATCH"] << _fields.join(".") << inject_ret << _limit << "/-1"
+    p @_fields
+    q = ["MATCH"] << @_fields.join(".") << inject_ret << _limit << "/-1"
     q.compact.flatten.join(" ")
   end
 
@@ -113,7 +115,7 @@ class Rorient::Query::Match
   
   def inject_where
     @_where.each_with_index do |filters, field_pos|
-      filters ? (@_fields[field_pos].split("}")<< "where: (#{filters})}").join(", ") : @_fields[field_pos] 
+      @_fields[field_pos] = (@_fields[field_pos].split("}")<< "where: (#{filters})}").join(", ") if filters
     end
   end
 
