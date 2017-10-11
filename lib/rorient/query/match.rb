@@ -123,7 +123,7 @@ class Rorient::Query::Match
     asd_ret = @_ret.compact.each_with_index do |rets, field_pos|
       rets.map{|ret| _fields[field_pos].match(/\bas:\s+\K\w*/)[0] + ".#{ret}" }
     end
-    asd_ret.empty? ? "RETURN $pathElements" : "RETURN " << asd_ret.flatten.join(" ")
+    asd_ret.empty? ? "RETURN $pathElements" : "RETURN " << asd_ret.flatten.join(",")
   end
 end
 
