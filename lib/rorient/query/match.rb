@@ -2,7 +2,7 @@ class Rorient::Query::Match
   include Enumerable
   include Rorient::Query::Util
 
-  attr_reader :db, :_fields, :_where, :_where_pos, :_ret, :_ret_pos, :_limit
+  attr_reader :db, :_fields, :_where, :_where_pos, :_ret, :_ret_pos, :_limit, :last_type
 
   def initialize(db)
     @db = db 
@@ -13,6 +13,7 @@ class Rorient::Query::Match
     @_ret_pos = 0
     @_limit = nil
     @_order = nil 
+    @last_type = nil
   end
 
   def from(start, &block)
@@ -29,6 +30,7 @@ class Rorient::Query::Match
     bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
     field = direction ? "#{direction}#{v_or_e}()" : ""
     field << "{class: #{type.name}, as: #{type.name.underscore}}"
+    @last_type = type.name
     @_fields << field 
     @_ret << nil &&  @_where << nil 
     where(&block) if block
@@ -86,7 +88,8 @@ class Rorient::Query::Match
   end
   
   def optional
-    @_fields = @_fields[0..-2] << (@_fields.last.split("}")<< "optional: true}").join(", ")
+    no_class_match = @_fields.last.split("class: #{last_type},").join("")
+    @_fields = @_fields[0..-2] << no_class_match
     self
   end
 
