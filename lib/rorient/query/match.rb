@@ -29,7 +29,7 @@ class Rorient::Query::Match
     bark("Direction must be one of :in, :out, :both") unless [:in, :out, :both].include?(direction) if direction
     bark("The type must be either and Edge or a Vertex class") unless (type.ancestors & [Rorient::Vertex, Rorient::Edge]).any?
     field = direction ? "#{direction}#{v_or_e}()" : ""
-    field << "{class: #{type.name}, as: #{type.name.underscore}}"
+    field << "{class: #{type.name}, as: #{unique_as(type.name.underscore)}}"
     @last_type = type.name
     @_fields << field 
     @_ret << nil &&  @_where << nil 
@@ -130,6 +130,10 @@ class Rorient::Query::Match
       rets.map{|ret| _fields[field_pos].match(/\bas:\s+\K\w*/)[0] + ".#{ret}" }
     end
     asd_ret.empty? ? "RETURN $pathElements" : "RETURN " << asd_ret.flatten.join(",")
+  end
+
+  def unique_as(as_name)
+    _fields.map{|f| f.split(as_name).length == 1 ? nil : true }.any? ? as_name.next : as_name  
   end
 end
 
