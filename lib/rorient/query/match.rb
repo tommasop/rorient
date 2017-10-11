@@ -30,7 +30,7 @@ class Rorient::Query::Match
     field = direction ? "#{direction}#{v_or_e}()" : ""
     field << "{class: #{type.name}, as: #{type.name.underscore}}"
     @_fields << field 
-    @_ret << nil &&  @_where << nil
+    @_ret << nil &&  @_where << nil 
     where(&block) if block
     self
   end
@@ -84,6 +84,11 @@ class Rorient::Query::Match
     @_ret_pos += 1
     self
   end
+  
+  def optional
+    @_fields = @_fields[0..-2] << (@_fields.last.split("}")<< "optional: true}").join(", ")
+    self
+  end
 
 
   def limit(record_number = 20)
@@ -92,9 +97,7 @@ class Rorient::Query::Match
   end
 
   def osql
-    p @_fields
     inject_where
-    p @_fields
     q = ["MATCH"] << @_fields.join(".") << inject_ret << _limit << "/-1"
     q.compact.flatten.join(" ")
   end

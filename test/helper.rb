@@ -29,6 +29,8 @@ class DrawingLayers < Rorient::Edge(ODB); end
 class Layer < Rorient::Vertex(ODB); end
 class LayerEntities < Rorient::Edge(ODB); end
 class Entity < Rorient::Vertex(ODB); end
+class BlockReference < Rorient::Edge(ODB); end
+class BlockDefinition < Rorient::Vertex(ODB); end
 class IntegrationDrawing < Rorient::Edge(ODB); end
 class IntegrationLayers < Rorient::Edge(ODB); end
 class IntegrationEntities < Rorient::Edge(ODB); end
