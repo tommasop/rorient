@@ -2,7 +2,7 @@ class Rorient::Query::Match
   include Enumerable
   include Rorient::Query::Util
 
-  attr_reader :db, :_fields, :_where, :_where_pos, :_ret, :_ret_pos, :_limit, :last_type
+  attr_reader :db, :_fields, :_where, :_where_pos, :_ret, :_ret_pos, :_limit, :_optional, :last_type
 
   def initialize(db)
     @db = db 
@@ -13,6 +13,7 @@ class Rorient::Query::Match
     @_ret_pos = 0
     @_limit = nil
     @_order = nil 
+    @_optional = []
     @last_type = nil
   end
 
@@ -88,8 +89,7 @@ class Rorient::Query::Match
   end
   
   def optional
-    no_class_match = @_fields.last.split("class: #{last_type},").join("")
-    @_fields = @_fields[0..-2] << no_class_match
+    @_optional << [@_fields.length - 1, last_type]
     self
   end
 
@@ -100,6 +100,7 @@ class Rorient::Query::Match
   end
 
   def osql
+    inject_opt
     inject_where
     q = ["MATCH"] << @_fields.join(".") << inject_ret << _limit << "/-1"
     q.compact.flatten.join(" ")
@@ -118,6 +119,16 @@ class Rorient::Query::Match
   end
 
   private
+
+  def inject_opt
+    _optional.each do | opt |
+      if @_fields.length == opt[0] + 1
+        @_fields[opt[0]] = (@_fields[opt[0]].split("}") << "optional: true }").join(", ")
+      else
+        @_fields[opt[0]] = @_fields[opt[0]].split("class: #{opt[1]},").join("") 
+      end
+    end
+  end
   
   def inject_where
     @_where.each_with_index do |filters, field_pos|
