@@ -31,7 +31,7 @@ class Rorient::Query::Where
       case args.first
       when :like; @conditions << "#{name} LIKE '%#{args.last}%'"
       else 
-        if name == "rid"   
+        if name == :rid   
           @conditions << "@#{name} IN [#{args.map{|a| "#{a}"}.join(",")}]"
         else
           @conditions << "#{name} IN [#{args.map{|a| "'#{a}'"}.join(",")}]"
