@@ -33,45 +33,50 @@ class Rorient::Query::Match
     field << "{class: #{type.name}, as: #{unique_as(type.name.underscore)}}"
     @last_type = type.name
     @_fields << field 
-    @_ret << nil &&  @_where << nil 
-    where(&block) if block
+    if block
+      @_ret << nil && @_where << nil 
+      where(&block)
+    else
+      @_ret << nil && @_where << nil 
+      @_ret_pos += 1 && @_where_pos += 1
+    end
     self
   end
 
-  def in(type = nil)
-    fields(:in, "", type)
+  def in(type = nil, &block)
+    fields(:in, "", type, &block)
   end
   
-  def inE(type = nil)
-    fields(:in, "E", type)
+  def inE(type = nil, &block)
+    fields(:in, "E", type, &block)
   end
   
-  def inV(type = nil)
-    fields(:in, "V", type)
+  def inV(type = nil, &block)
+    fields(:in, "V", type, &block)
   end
   
-  def out(type = nil)
-    fields(:out, "", type)
+  def out(type = nil, &block)
+    fields(:out, "", type, &block)
   end
   
-  def outE(type = nil)
-    fields(:out, "E", type)
+  def outE(type = nil, &block)
+    fields(:out, "E", type, &block)
   end
 
-  def outV(type = nil)
-    fields(:out, "V", type)
+  def outV(type = nil, &block)
+    fields(:out, "V", type, &block)
   end
 
-  def both(type = nil)
-    fields(:both, "", type)
+  def both(type = nil, &block)
+    fields(:both, "", type, &block)
   end
   
-  def bothE(type = nil)
-    fields(:both, "E", type)
+  def bothE(type = nil, &block)
+    fields(:both, "E", type, &block)
   end
 
-  def bothV(type = nil)
-    fields(:both, "V", type)
+  def bothV(type = nil, &block)
+    fields(:both, "V", type, &block)
   end
 
   def where(*args, &block)
