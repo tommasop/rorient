@@ -30,7 +30,12 @@ class Rorient::Query::Where
     when args.count > 1
       case args.first
       when :like; @conditions << "#{name} LIKE '%#{args.last}%'"
-      else @conditions << "#{name} IN [#{args.map{|a| "'#{a}'"}.join(",")}]"
+      else 
+        if name == "rid"   
+          @conditions << "@#{name} IN [#{args.map{|a| "#{a}"}.join(",")}]"
+        else
+          @conditions << "#{name} IN [#{args.map{|a| "'#{a}'"}.join(",")}]"
+        end
       end
     else 
       param = [String, Symbol].include?(args.first.class) ? "'#{args.first}'" : args.first 
