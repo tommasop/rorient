@@ -57,7 +57,7 @@ class Rorient::Query::Select
   end
   
   def subquery(type: "select")
-    bark("FROM already initialized for current query") if @subquery
+    bark("FROM already initialized for current query") if @_form
     @subquery ||= Rorient::Query.send(type, db)
   end
 
