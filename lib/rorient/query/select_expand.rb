@@ -25,8 +25,10 @@ class Rorient::Query::SelectExpand
     field = "#{direction}#{v_or_e}"
     type ? field << "('#{type}')" : field << "()"
     @_fields << field 
-    @_where << nil
-    where(&block) if block
+    if block
+      @_where << nil
+      where(&block)
+    end
     self
   end
 
@@ -111,7 +113,7 @@ class Rorient::Query::SelectExpand
 
   def execute
     results = raw.map!{|i| i[:@class].constantize.new(i)}
-    # results.size > 1 ? results : results.first
+    results.size > 1 ? results : results.first
   end
 
   def raw
@@ -126,6 +128,8 @@ class Rorient::Query::SelectExpand
     @_where.each_with_index do |filters, field_pos|
       filters ? @_fields[field_pos] << "[ #{filters} ]" : @_fields[field_pos] 
     end
+    @_where = []
+    @_where_pos = 0
   end
 end
 
