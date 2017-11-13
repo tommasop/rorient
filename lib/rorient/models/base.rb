@@ -125,7 +125,6 @@ module Rorient
     end
 
     def self.o_name
-      p self.ancestors
       case self.superclass.name
       when "Rorient::Vertex"
         "V"
