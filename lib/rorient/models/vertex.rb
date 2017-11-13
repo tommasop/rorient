@@ -24,7 +24,7 @@ module Rorient
     
     # Delete arrays of nodes
     def self.delete(*ids)
-      odb.command.execute(command_text: URI.encode("DELETE VERTEX #{self.o_name} WHERE @rid IN [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}]", " '%,:#()[]"))
+      odb.command.execute(command_text: URI.encode("DELETE VERTEX FROM (SELECT FROM [#{ids.map{|r| Rorient::Rid.new(rid_obj: r).rid }.compact.join(",")}] WHERE @class INSTANCEOF '#{self.o_name}')", " '%,:#()[]"))
       return self
     end
     
