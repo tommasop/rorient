@@ -124,6 +124,18 @@ module Rorient
       results
     end
 
+    def self.o_name
+      p self.ancestors
+      case self.superclass.name
+      when "Rorient::Vertex"
+        "V"
+      when "Rorient::Edge" 
+        "E"
+      else
+        self.name
+      end
+    end
+
     def initialize(atts={})
       @attributes = {}
       @_memo = {}
